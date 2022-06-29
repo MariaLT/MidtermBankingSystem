@@ -45,5 +45,51 @@ public class AccountHolder extends User{
     private Set<Account> secundaryOwnerAccount;
 
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Address getPrimaryAddress() {
+        return primaryAddress;
+    }
+
+    public void setPrimaryAddress(Address primaryAddress) {
+        this.primaryAddress = primaryAddress;
+    }
+
+    public String getMailingAddress() {
+        return mailingAddress;
+    }
+
+    public void setMailingAddress(String mailingAddress) {
+        this.mailingAddress = mailingAddress;
+    }
+
+    public Set<Account> getPrimaryOwnerAccount() {
+        return primaryOwnerAccount;
+    }
+
+    public void setPrimaryOwnerAccount(Set<Account> primaryOwnerAccount) {
+        this.primaryOwnerAccount = primaryOwnerAccount;
+    }
+
+    public Set<Account> getSecundaryOwnerAccount() {
+        return secundaryOwnerAccount;
+    }
+
+    public void setSecundaryOwnerAccount(Set<Account> secundaryOwnerAccount) {
+        this.secundaryOwnerAccount = secundaryOwnerAccount;
+    }
 }

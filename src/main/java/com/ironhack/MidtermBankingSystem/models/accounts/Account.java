@@ -47,27 +47,29 @@ public class Account {
      */
     public Account() {
     }
+//
+//    /**
+//     * Constructor with one owner, specifying balance, secret key, primary owner and penalty fee,
+//     * status default as active and creation date default as current date.
+//     * @param balance
+//     * @param secretKey
+//     * @param primaryOwner
+//     * @param penaltyFee
+//     */
+//    public Account(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee) {
+//        this.balance = balance;
+//        this.secretKey = secretKey;
+//        this.primaryOwner = primaryOwner;
+//        this.penaltyFee = penaltyFee;
+//        this.status= Status.ACTIVE;
+//        this.creationDate = LocalDate.now();
+//    }
 
     /**
-     * Constructor with one owner, specifying balance, secret key, primary owner and penalty fee,
-     * status default as active and creation date default as current date.
-     * @param balance
-     * @param secretKey
-     * @param primaryOwner
-     * @param penaltyFee
-     */
-    public Account(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee) {
-        this.balance = balance;
-        this.secretKey = secretKey;
-        this.primaryOwner = primaryOwner;
-        this.penaltyFee = penaltyFee;
-        this.status= Status.ACTIVE;
-        this.creationDate = LocalDate.now();
-    }
-
-    /**
-     *  Constructor with one owner, specifying balance, secret key, primary owner and penalty fee, status
-     *  and creation date.
+     * Constructor with one owner, specifying balance, secret key, primary owner and penalty fee, status
+     * and creation date. If status is null, is assigned by default Status.ACTIVE. If creation date is null,
+     * is assigned by default the current date.
+     *
      * @param balance
      * @param secretKey
      * @param primaryOwner
@@ -77,34 +79,39 @@ public class Account {
      */
     public Account(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee,
                    Status status, LocalDate creationDate) {
-        this(balance, secretKey, primaryOwner, penaltyFee);
-        this.status = status;
-        this.creationDate = creationDate;
-    }
-
-    /**
-     * Constructor with two owner, specifying balance, secret key, primary owner, secondary owner and penalty
-     * fee, status default as active and creation date default as current date.
-     * @param balance
-     * @param secretKey
-     * @param primaryOwner
-     * @param secondaryOwner
-     * @param penaltyFee
-     */
-    public Account(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
-                   BigDecimal penaltyFee) {
         this.balance = balance;
         this.secretKey = secretKey;
         this.primaryOwner = primaryOwner;
-        this.secondaryOwner = secondaryOwner;
         this.penaltyFee = penaltyFee;
-        this.status= Status.ACTIVE;
-        this.creationDate = LocalDate.now();
+        setStatus(status);
+        setCreationDate(creationDate);
     }
 
+//    /**
+//     * Constructor with two owner, specifying balance, secret key, primary owner, secondary owner and penalty
+//     * fee, status default as active and creation date default as current date.
+//     * @param balance
+//     * @param secretKey
+//     * @param primaryOwner
+//     * @param secondaryOwner
+//     * @param penaltyFee
+//     */
+//    public Account(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+//                   BigDecimal penaltyFee) {
+//        this.balance = balance;
+//        this.secretKey = secretKey;
+//        this.primaryOwner = primaryOwner;
+//        this.secondaryOwner = secondaryOwner;
+//        this.penaltyFee = penaltyFee;
+//        this.status= Status.ACTIVE;
+//        this.creationDate = LocalDate.now();
+//    }
+
     /**
-     * Constructor with two owner, specifying balance, secret key, primary owner, secondary owner and penalty
-     * fee, status and creation date.
+     * Constructor with two owners, specifying balance, secret key, primary owner, secondary owner and penalty
+     * fee, status and creation date. If status is null, is assigned by default Status.ACTIVE. If creation date is null,
+     * *  is assigned by default the current date.
+     *
      * @param balance
      * @param secretKey
      * @param primaryOwner
@@ -115,10 +122,13 @@ public class Account {
      */
     public Account(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
                    BigDecimal penaltyFee, Status status, LocalDate creationDate) {
-        this (balance, secretKey, primaryOwner, secondaryOwner, penaltyFee);
-        this.status = status;
-        this.creationDate =creationDate;
-
+        this.balance = balance;
+        this.secretKey = secretKey;
+        this.primaryOwner = primaryOwner;
+        this.secondaryOwner = secondaryOwner;
+        this.penaltyFee = penaltyFee;
+        setStatus(status);
+        setCreationDate(creationDate);
     }
 
     // Getter and Setter ID
@@ -181,7 +191,11 @@ public class Account {
     }
 
     public void setStatus(Status status) {
-        this.status = status;
+        if (status == null) {
+            this.status = Status.ACTIVE;
+        } else {
+            this.status = status;
+        }
     }
 
     // Getter and Setter Creation Date
@@ -190,6 +204,10 @@ public class Account {
     }
 
     public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
+        if (creationDate == null) {
+            this.creationDate = LocalDate.now();
+        } else {
+            this.creationDate = creationDate;
+        }
     }
 }

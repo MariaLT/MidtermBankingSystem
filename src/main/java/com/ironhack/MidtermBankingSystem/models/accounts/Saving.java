@@ -21,20 +21,20 @@ public class Saving extends Account {
     private BigDecimal interestRate;
 
     /**
-     * Minimum default value of interested rate:
+     * Minimum default value of interest rate:
      * 0.0025
      */
     private final static BigDecimal DEFAULT_MIN_VALUE_INTEREST_RATE = BigDecimal.valueOf(0.0025);
 
 
     /**
-     * Maximum value of interested rate:
+     * Maximum value of interest rate:
      * 0.50
      */
     private final static BigDecimal MAX_VALUE_INTEREST_RATE = BigDecimal.valueOf(0.50);
 
 
-    // Saving accounts should have a default minimumBalance of 1000
+
     /**
      * Minimum default value of balance:
      * 1000
@@ -46,7 +46,7 @@ public class Saving extends Account {
     })
     private final static Money DEFAULT_MIN_BALANCE = new Money( BigDecimal.valueOf(1000));
 
-    //Saving accounts may be instantiated with a minimum balance of less than 1000 but no lower than 100
+
     /**
      * Minimum value of balance:
      * 1000
@@ -66,28 +66,29 @@ public class Saving extends Account {
 
     }
 
-    /**
-     * Constructor with one owner, specifying balance, secret key, primary owner and penalty fee,
-     * status default as active and creation date default as current date. Saving accounts have
-     * a default interest rate of 0.0025, however it may be instantiated with an interest rate other
-     * than the default, with a maximum interest rate of 0.5
-     *
-     * @param balance
-     * @param secretKey
-     * @param primaryOwner
-     * @param penaltyFee
-     * @param minimumBalance
-     * @param interestRate
-     */
-    public Saving(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee, Money minimumBalance, BigDecimal interestRate) {
-        super(balance, secretKey, primaryOwner, penaltyFee);
-        this.minimumBalance = minimumBalance;
-        setInterestRate(interestRate);
-    }
+//    /**
+//     * Constructor with one owner, specifying balance, secret key, primary owner and penalty fee,
+//     * status default as active and creation date default as current date. Saving accounts have
+//     * a default interest rate of 0.0025, however it may be instantiated with an interest rate other
+//     * than the default, with a maximum interest rate of 0.5
+//     *
+//     * @param balance
+//     * @param secretKey
+//     * @param primaryOwner
+//     * @param penaltyFee
+//     * @param minimumBalance
+//     * @param interestRate
+//     */
+//    public Saving(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee, Money minimumBalance, BigDecimal interestRate) {
+//        super(balance, secretKey, primaryOwner, penaltyFee);
+//        this.minimumBalance = minimumBalance;
+//        setInterestRate(interestRate);
+//    }
 
     /**
-     * Constructor with one owner, specifying balance, secret key, primary owner and penalty fee, status
-     * and creation date.
+     * Saving Account Constructor with one owner, specifying balance, secret key, primary owner and penalty fee,
+     * status, creation date, minimum balance and interest rate. If status is null, is assigned by default Status.ACTIVE. If creation date is null,
+     * is assigned by default the current date.
      *
      * @param balance
      * @param secretKey
@@ -100,31 +101,32 @@ public class Saving extends Account {
      */
     public Saving(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee, Status status, LocalDate creationDate, Money minimumBalance, BigDecimal interestRate) {
         super(balance, secretKey, primaryOwner, penaltyFee, status, creationDate);
-        this.minimumBalance = minimumBalance;
+        setMinimumBalance(minimumBalance);
         setInterestRate(interestRate);
     }
 
-    /**
-     * Constructor with two owner, specifying balance, secret key, primary owner, secondary owner and penalty
-     * fee, status default as active and creation date default as current date.
-     *
-     * @param balance
-     * @param secretKey
-     * @param primaryOwner
-     * @param secondaryOwner
-     * @param penaltyFee
-     * @param minimumBalance
-     * @param interestRate
-     */
-    public Saving(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal penaltyFee, Money minimumBalance, BigDecimal interestRate) {
-        super(balance, secretKey, primaryOwner, secondaryOwner, penaltyFee);
-        this.minimumBalance = minimumBalance;
-        setInterestRate(interestRate);
-    }
+//    /**
+//     * Constructor with two owner, specifying balance, secret key, primary owner, secondary owner and penalty
+//     * fee, status default as active and creation date default as current date.
+//     *
+//     * @param balance
+//     * @param secretKey
+//     * @param primaryOwner
+//     * @param secondaryOwner
+//     * @param penaltyFee
+//     * @param minimumBalance
+//     * @param interestRate
+//     */
+//    public Saving(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal penaltyFee, Money minimumBalance, BigDecimal interestRate) {
+//        super(balance, secretKey, primaryOwner, secondaryOwner, penaltyFee);
+//        this.minimumBalance = minimumBalance;
+//        setInterestRate(interestRate);
+//    }
 
     /**
-     * Constructor with two owner, specifying balance, secret key, primary owner, secondary owner and penalty
-     * fee, status and creation date.
+     * Saving Account Constructor with two owners, specifying balance, secret key, primary owner, secondary owner
+     * and penalty fee, status, creation date, minimum balance and interest rate. If status is null, is assigned
+     * by default Status.ACTIVE. If creation date is null, is assigned by default the current date.
      *
      * @param balance
      * @param secretKey
@@ -138,7 +140,7 @@ public class Saving extends Account {
      */
     public Saving(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal penaltyFee, Status status, LocalDate creationDate, Money minimumBalance, BigDecimal interestRate) {
         super(balance, secretKey, primaryOwner, secondaryOwner, penaltyFee, status, creationDate);
-        this.minimumBalance = minimumBalance;
+        setMinimumBalance(minimumBalance);
         setInterestRate(interestRate);
     }
 
@@ -147,6 +149,11 @@ public class Saving extends Account {
         return minimumBalance;
     }
 
+    /**
+     * Savings accounts should have a default minimumBalance of 1000. It may be instantiated with a minimum balance of less
+     * than 1000 but no lower than 100
+     * @param minimumBalance
+     */
     public void setMinimumBalance(Money minimumBalance) {
 
         if (minimumBalance == null) {
@@ -163,6 +170,11 @@ public class Saving extends Account {
         return interestRate;
     }
 
+    /**
+     * Savings accounts have a default interest rate of 0.0025. It may be instantiated with an interest rate other than
+     * the default, with a maximum interest rate of 0.5.
+     * @param interestRate
+     */
     public void setInterestRate(BigDecimal interestRate) {
         if (interestRate.compareTo(DEFAULT_MIN_VALUE_INTEREST_RATE) == -1) {
             this.interestRate = DEFAULT_MIN_VALUE_INTEREST_RATE;
