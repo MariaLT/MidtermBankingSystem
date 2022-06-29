@@ -6,23 +6,34 @@ import com.ironhack.MidtermBankingSystem.enums.Status;
 import com.ironhack.MidtermBankingSystem.models.users.AccountHolder;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "account_table")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Account {
 
     @Id
     @Column(unique = true)
     private Long id;
+    @Embedded
     private Money balance;
+
     private String secretKey;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "primary_owner")
     private AccountHolder primaryOwner;
-    private AccountHolder secondaryOwner; // Un constructor con y sin
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "secondary_owner")
+    private AccountHolder secondaryOwner; // Un constructor con y otro sin
+
+    @Embedded
     private Money penaltyFee;
+
+    @Enumerated(EnumType.STRING)
     private Status status;
+
     private LocalDate creationDate;
 
 
