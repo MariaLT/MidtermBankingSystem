@@ -1,13 +1,13 @@
-CREATE SCHEMA IF NOT EXISTS midterm;
-
 DROP SCHEMA midterm;
+
+CREATE SCHEMA IF NOT EXISTS midterm;
 
 USE midterm;
 
 CREATE TABLE user_table (
     id BIGINT AUTO_INCREMENT NOT NULL,
     username VARCHAR(255),
-    password VARCHAR(255),
+    password VARCHAR(255), 
     PRIMARY KEY (id)
 );
 CREATE TABLE role_table (
@@ -21,26 +21,18 @@ CREATE TABLE IF NOT EXISTS admin_table (
 id BIGINT,
 name VARCHAR (255),
 PRIMARY KEY (id),
-FOREIGN KEY (user_id) REFERENCES user_table (id)
+FOREIGN KEY (id) REFERENCES user_table (id)
 );
 
 CREATE TABLE IF NOT EXISTS third_party (
 id BIGINT,
 name VARCHAR (255),
-hashedKey VARCHAR (255),
+hashed_key VARCHAR (255),
 PRIMARY KEY (id),
-FOREIGN KEY (user_id) REFERENCES user_table (id)
+FOREIGN KEY (id) REFERENCES user_table (id)
 );
 
-CREATE TABLE IF NOT EXISTS account_holder (
-id BIGINT,
-first_name VARCHAR (255),
-date_of_birth DATE,
-mailing_address VARCHAR (255),
-PRIMARY KEY (id),
-FOREIGN KEY (user_id) REFERENCES user_table (id)
-);
-
+/*
 CREATE TABLE IF NOT EXISTS address (
 id INT NOT NULL AUTO_INCREMENT,
 street VARCHAR (255),
@@ -50,53 +42,73 @@ door CHAR,
 zip_code INT,
 city VARCHAR (255),
 country VARCHAR (255),
-inhabitant BIGINT,
-PRIMARY KEY(id),
-FOREIGN KEY (inhabitant) REFERENCES account_holder (id) ON UPDATE CASCADE ON DELETE CASCADE
+PRIMARY KEY(id)
+);*/
+
+
+CREATE TABLE IF NOT EXISTS account_holder (
+id BIGINT,
+first_name VARCHAR (255),
+date_of_birth DATE,
+mailing_address VARCHAR (255),
+primary_address  VARCHAR (255),
+street VARCHAR (255),
+building_number SMALLINT,
+floor TINYINT,
+door CHAR,
+zip_code INT,
+city VARCHAR (255),
+country VARCHAR (255),
+PRIMARY KEY (id),
+FOREIGN KEY (id) REFERENCES user_table (id)
 );
 
 
 CREATE TABLE IF NOT EXISTS account_table (
 id BIGINT NOT NULL UNIQUE,
-balance DECIMAL,
+balance_amount DECIMAL,
+balance_currency VARCHAR(255),
 secret_key VARCHAR(255),
 primary_owner BIGINT,
 secondary_owner BIGINT,
-penaltyFee DECIMAL,
+penalty_fee DECIMAL,
 status VARCHAR(255),
-creationDate DATE DEFAULT (current_date()),
+creation_date DATE DEFAULT (current_date()),
 PRIMARY KEY (id),
-FOREIGN KEY (primary_owner) REFERENCES account_holder (id) ON UPDATE CASCADE ON DELETE CASCADE,
-FOREIGN KEY (secondary_owner) REFERENCES account_holder (id) ON UPDATE CASCADE ON DELETE CASCADE
+FOREIGN KEY (primary_owner) REFERENCES account_holder (id),
+FOREIGN KEY (secondary_owner) REFERENCES account_holder (id) 
 );
 
 CREATE TABLE IF NOT EXISTS checking (
 id BIGINT,
-minimum_balance DECIMAL,
+minimum_balance_currency VARCHAR(255),
+minimum_balance_amount DECIMAL,
 monthly_maintenance_fee DECIMAL,
 PRIMARY KEY (id),
-FOREIGN KEY (id) REFERENCES account_table (id) ON UPDATE CASCADE ON DELETE CASCADE
+FOREIGN KEY (id) REFERENCES account_table (id) 
 );
 
 CREATE TABLE IF NOT EXISTS credit_card (
 id BIGINT,
-credit_limit DECIMAL,
+credit_limit_amount DECIMAL,
+credit_limit_currency VARCHAR(255),
 interest_rate DECIMAL,
 PRIMARY KEY (id),
-FOREIGN KEY (id) REFERENCES account_table (id) ON UPDATE CASCADE ON DELETE CASCADE
+FOREIGN KEY (id) REFERENCES account_table (id) 
 );
 
-CREATE TABLE IF NOT EXISTS savings (
+CREATE TABLE IF NOT EXISTS saving (
 id BIGINT,
-minimum_balance DECIMAL,
+minimum_balance_amount DECIMAL,
+minimum_balance_currency VARCHAR(255),
 interest_rate DECIMAL,
 PRIMARY KEY (id),
-FOREIGN KEY (id) REFERENCES account_table (id) ON UPDATE CASCADE ON DELETE CASCADE
+FOREIGN KEY (id) REFERENCES account_table (id) 
 );
 
 
 CREATE TABLE IF NOT EXISTS student_checking (
 id BIGINT,
 PRIMARY KEY (id),
-FOREIGN KEY (id) REFERENCES account_table (id) ON UPDATE CASCADE ON DELETE CASCADE
+FOREIGN KEY (id) REFERENCES account_table (id) 
 );
