@@ -3,7 +3,7 @@ package com.ironhack.MidtermBankingSystem.models.users;
 import javax.persistence.*;
 
 /**
- * Represent a user who is admin and can create new accounts (Checking, Savings, or CreditCard Accounts) and
+ * Represent a user who is admin and can create new accounts (Checking, Saving, or CreditCard Accounts) and
  * should be able to access the balance for any account and to modify it.
  */
 // No pueden crear de estudaints¿?

@@ -5,6 +5,7 @@ import com.ironhack.MidtermBankingSystem.auxiliary.Address;
 import com.ironhack.MidtermBankingSystem.models.accounts.Account;
 
 import javax.persistence.*;
+import javax.print.attribute.standard.MediaSize;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -23,7 +24,17 @@ public class AccountHolder extends User{
     @Column(name = "first_name")
     private String name;
     private LocalDate dateOfBirth;
-    @OneToOne // Como entidad o como clase
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "street", column = @Column(name = "street")),
+            @AttributeOverride(name = "number", column = @Column(name = "building_number")),
+            @AttributeOverride(name = "floor", column = @Column(name = "floor")),
+            @AttributeOverride(name = "door", column = @Column(name = "door")),
+            @AttributeOverride(name = "zipCode", column = @Column(name = "zip_code")),
+            @AttributeOverride(name = "city", column = @Column(name = "city")),
+            @AttributeOverride(name = "country", column = @Column(name = "country"))
+    })
     private Address primaryAddress;
     private String mailingAddress; // regex
 
