@@ -1,7 +1,7 @@
-package com.ironhack.MidtermBankingSystem.service.impl;
+package com.ironhack.MidtermBankingSystem.service.impl.users;
 
 import com.ironhack.MidtermBankingSystem.models.users.User;
-import com.ironhack.MidtermBankingSystem.repository.UserRepository;
+import com.ironhack.MidtermBankingSystem.repository.users.UserRepository;
 import com.ironhack.MidtermBankingSystem.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

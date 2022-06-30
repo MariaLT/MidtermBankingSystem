@@ -12,14 +12,44 @@ import java.time.LocalDate;
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
 public class StudentChecking extends Account {
+
+    /**
+     * Empty constructor
+     */
     public StudentChecking() {
     }
 
-    public StudentChecking(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee, Status status, LocalDate creationDate) {
-        super(balance, secretKey, primaryOwner, penaltyFee, status, creationDate);
+    /**
+     * Constructor with one owner, specifying balance, secret key, primary owner, status
+     * and creation date. If status is null, is assigned by default Status.ACTIVE. Creation date is assigned
+     * by default the current date.
+     *
+     * @param balance
+     * @param secretKey
+     * @param primaryOwner
+     * @param status
+     */
+    public StudentChecking(Money balance, String secretKey, AccountHolder primaryOwner, Status status,
+                           LocalDate creationDate) {
+        super(balance, secretKey, primaryOwner, status);
     }
 
-    public StudentChecking(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal penaltyFee, Status status, LocalDate creationDate) {
-        super(balance, secretKey, primaryOwner, secondaryOwner, penaltyFee, status, creationDate);
+
+    /**
+     * Constructor with two owners, specifying balance, secret key, primary owner, secondary owner, status and
+     * creation date. If status is null, is assigned by default Status.ACTIVE. Creation date is assigned
+     * by default the current date.
+     *
+     * @param balance
+     * @param secretKey
+     * @param primaryOwner
+     * @param secondaryOwner
+     * @param status
+     */
+    public StudentChecking(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+                           Status status, LocalDate creationDate) {
+        super(balance, secretKey, primaryOwner, secondaryOwner, status);
     }
+
+
 }

@@ -93,8 +93,9 @@ id BIGINT,
 credit_limit_amount DECIMAL,
 credit_limit_currency VARCHAR(255),
 interest_rate DECIMAL,
+interest_add_date DATE,
 PRIMARY KEY (id),
-FOREIGN KEY (id) REFERENCES account_table (id) 
+FOREIGN KEY (id) REFERENCES account_table (id)
 );
 
 CREATE TABLE IF NOT EXISTS saving (
@@ -102,6 +103,7 @@ id BIGINT,
 minimum_balance_amount DECIMAL,
 minimum_balance_currency VARCHAR(255),
 interest_rate DECIMAL,
+interest_add_date DATE,
 PRIMARY KEY (id),
 FOREIGN KEY (id) REFERENCES account_table (id) 
 );

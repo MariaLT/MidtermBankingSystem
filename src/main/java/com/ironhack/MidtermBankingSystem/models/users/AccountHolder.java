@@ -6,6 +6,7 @@ import com.ironhack.MidtermBankingSystem.models.accounts.Account;
 
 import javax.persistence.*;
 import javax.print.attribute.standard.MediaSize;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -16,10 +17,6 @@ import java.util.Set;
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
 public class AccountHolder extends User{
-
-/*    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;*/
 
     @Column(name = "first_name")
     private String name;
@@ -36,6 +33,8 @@ public class AccountHolder extends User{
             @AttributeOverride(name = "country", column = @Column(name = "country"))
     })
     private Address primaryAddress;
+
+    @Pattern(regexp = "^(.+)@(.+)$", message = "Mail address not valid")
     private String mailingAddress; // regex
 
     @OneToMany(mappedBy = "primaryOwner")
@@ -44,6 +43,17 @@ public class AccountHolder extends User{
     @OneToMany(mappedBy = "secondaryOwner")
     private Set<Account> secundaryOwnerAccount;
 
+    public AccountHolder() {
+    }
+
+    public AccountHolder(Long id, String username, String password, String name,
+                         LocalDate dateOfBirth, Address primaryAddress, String mailingAddress) {
+        super(id, username, password);
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.primaryAddress = primaryAddress;
+        this.mailingAddress = mailingAddress;
+    }
 
     public String getName() {
         return name;

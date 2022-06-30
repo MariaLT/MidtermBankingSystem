@@ -1,7 +1,7 @@
 package com.ironhack.MidtermBankingSystem.models.accounts;
 
 import com.ironhack.MidtermBankingSystem.auxiliary.Money;
-import com.ironhack.MidtermBankingSystem.auxiliary.Utilities;
+import com.ironhack.MidtermBankingSystem.service.UtilityService;
 import com.ironhack.MidtermBankingSystem.enums.Status;
 import com.ironhack.MidtermBankingSystem.models.users.AccountHolder;
 
@@ -9,7 +9,6 @@ import com.ironhack.MidtermBankingSystem.models.users.AccountHolder;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Currency;
 
 @Entity
 @Table(name = "account_table")
@@ -17,6 +16,7 @@ import java.util.Currency;
 public class Account {
 
     @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private Long id;
     @Embedded
@@ -32,10 +32,15 @@ public class Account {
     private AccountHolder primaryOwner;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "secondary_owner")
-    private AccountHolder secondaryOwner; // Un constructor con y otro sin
+    private AccountHolder secondaryOwner;
 
+    private static UtilityService utilityService;
 
-    private BigDecimal penaltyFee;
+    /**
+     * ¿Por qué no me deja?
+     * {@value BigDecimal.valueOf(40)}
+     */
+    public static final BigDecimal PENALTY_FEE = BigDecimal.valueOf(40);
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -47,88 +52,48 @@ public class Account {
      */
     public Account() {
     }
-//
-//    /**
-//     * Constructor with one owner, specifying balance, secret key, primary owner and penalty fee,
-//     * status default as active and creation date default as current date.
-//     * @param balance
-//     * @param secretKey
-//     * @param primaryOwner
-//     * @param penaltyFee
-//     */
-//    public Account(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee) {
-//        this.balance = balance;
-//        this.secretKey = secretKey;
-//        this.primaryOwner = primaryOwner;
-//        this.penaltyFee = penaltyFee;
-//        this.status= Status.ACTIVE;
-//        this.creationDate = LocalDate.now();
-//    }
 
     /**
-     * Constructor with one owner, specifying balance, secret key, primary owner and penalty fee, status
-     * and creation date. If status is null, is assigned by default Status.ACTIVE. If creation date is null,
-     * is assigned by default the current date.
+     * Constructor with one owner, specifying balance, secret key, primary owner, status
+     * and creation date. If status is null, is assigned by default Status.ACTIVE. Creation date is assigned
+     * by default the current date.
      *
      * @param balance
      * @param secretKey
      * @param primaryOwner
-     * @param penaltyFee
      * @param status
-     * @param creationDate
      */
-    public Account(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee,
-                   Status status, LocalDate creationDate) {
+    public Account(Money balance, String secretKey, AccountHolder primaryOwner,
+                   Status status) {
+        this.id = utilityService.randomId();
         this.balance = balance;
         this.secretKey = secretKey;
         this.primaryOwner = primaryOwner;
-        this.penaltyFee = penaltyFee;
         setStatus(status);
-        setCreationDate(creationDate);
+        this.creationDate = LocalDate.now();
     }
 
-//    /**
-//     * Constructor with two owner, specifying balance, secret key, primary owner, secondary owner and penalty
-//     * fee, status default as active and creation date default as current date.
-//     * @param balance
-//     * @param secretKey
-//     * @param primaryOwner
-//     * @param secondaryOwner
-//     * @param penaltyFee
-//     */
-//    public Account(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
-//                   BigDecimal penaltyFee) {
-//        this.balance = balance;
-//        this.secretKey = secretKey;
-//        this.primaryOwner = primaryOwner;
-//        this.secondaryOwner = secondaryOwner;
-//        this.penaltyFee = penaltyFee;
-//        this.status= Status.ACTIVE;
-//        this.creationDate = LocalDate.now();
-//    }
 
     /**
-     * Constructor with two owners, specifying balance, secret key, primary owner, secondary owner and penalty
-     * fee, status and creation date. If status is null, is assigned by default Status.ACTIVE. If creation date is null,
-     * *  is assigned by default the current date.
+     * Constructor with two owners, specifying balance, secret key, primary owner, secondary owner, status and
+     * creation date. If status is null, is assigned by default Status.ACTIVE. Creation date is assigned
+     * by default the current date.
      *
      * @param balance
      * @param secretKey
      * @param primaryOwner
      * @param secondaryOwner
-     * @param penaltyFee
      * @param status
-     * @param creationDate
      */
     public Account(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
-                   BigDecimal penaltyFee, Status status, LocalDate creationDate) {
+                   Status status) {
+        this.id = utilityService.randomId();
         this.balance = balance;
         this.secretKey = secretKey;
         this.primaryOwner = primaryOwner;
         this.secondaryOwner = secondaryOwner;
-        this.penaltyFee = penaltyFee;
         setStatus(status);
-        setCreationDate(creationDate);
+        this.creationDate = LocalDate.now();
     }
 
     // Getter and Setter ID
@@ -136,9 +101,6 @@ public class Account {
         return id;
     }
 
-    public void setId() {
-        this.id = Utilities.randomId();
-    }
 
     // Getter and Setter Balance
     public Money getBalance() {
@@ -176,14 +138,6 @@ public class Account {
         this.secondaryOwner = secondaryOwner;
     }
 
-    // Getter and Setter Penalty Fee
-    public BigDecimal getPenaltyFee() {
-        return penaltyFee;
-    }
-
-    public void setPenaltyFee(BigDecimal penaltyFee) {
-        this.penaltyFee = penaltyFee;
-    }
 
     // Getter and Setter Status
     public Status getStatus() {
@@ -204,10 +158,8 @@ public class Account {
     }
 
     public void setCreationDate(LocalDate creationDate) {
-        if (creationDate == null) {
-            this.creationDate = LocalDate.now();
-        } else {
-            this.creationDate = creationDate;
-        }
+        this.creationDate = creationDate;
     }
+
+
 }

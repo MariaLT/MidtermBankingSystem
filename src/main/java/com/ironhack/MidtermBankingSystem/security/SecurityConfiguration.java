@@ -19,17 +19,17 @@ public class SecurityConfiguration {
 
 
     //------------------- A editar con mis rutas -------------------//
-/*    @Bean
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.httpBasic(); // Vamos a utilizar basic auth
         http.csrf().disable(); // Desactivamos la protección CSRF porque nosotros no vamos a manejar el HTML
         http.authorizeRequests() // Vamos a estacler la protección de cada endpoint individualmente
-                .antMatchers(HttpMethod.GET, "/hello-world", "/hello-user").authenticated() // solo usuarios autenticados
-                .antMatchers(HttpMethod.GET, "/hello/**").hasRole("ADMIN") // Solo ADMIN
-                .antMatchers(HttpMethod.POST, "/hello-post").hasAnyRole("TECHNICIAN") // Solo ADMIN y TECHNICIAN
+                .antMatchers(HttpMethod.POST, "/accountHolders").authenticated() // solo usuarios autenticados
+                .antMatchers(HttpMethod.POST, "/accountHolders").hasRole("ADMIN") // Solo ADMIN
+                //.antMatchers(").hasAnyRole("OWNERS") // Solo ADMIN y TECHNICIAN
                 .anyRequest().permitAll(); // El resto de los enpoints son públicos
         return http.build();
-    }*/
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

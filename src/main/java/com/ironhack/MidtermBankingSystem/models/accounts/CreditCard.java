@@ -2,15 +2,17 @@ package com.ironhack.MidtermBankingSystem.models.accounts;
 
 import com.ironhack.MidtermBankingSystem.auxiliary.Money;
 import com.ironhack.MidtermBankingSystem.enums.Status;
+import com.ironhack.MidtermBankingSystem.interfaces.Interest;
 import com.ironhack.MidtermBankingSystem.models.users.AccountHolder;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
-public class CreditCard extends Account {
+public class CreditCard extends Account implements Interest {
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "amount", column = @Column(name = "credit_limit_amount")),
@@ -20,7 +22,7 @@ public class CreditCard extends Account {
 
     private BigDecimal interestRate;
 
-
+    private LocalDate interestAddDate;
 
     /**
      * Default value of credit limit:
@@ -59,6 +61,9 @@ public class CreditCard extends Account {
      */
     private final static BigDecimal MIN_VALUE_INTEREST_RATE = BigDecimal.valueOf(0.1);
 
+
+
+
     /**
      * Empty constructor
      */
@@ -67,44 +72,41 @@ public class CreditCard extends Account {
     }
 
     /**
-     * CreditCard Account Constructor with one owner, specifying balance, secret key, primary owner and penalty fee,
+     * CreditCard Account Constructor with one owner, specifying balance, secret key, primary owner,
      * status, creation date, credit limit and interest rate. If status is null, is assigned by default Status.ACTIVE.
-     * If creation date is null, is assigned by default the current date.
+     * Creation date is assigned by default the current date.
      *
      * @param balance
      * @param secretKey
      * @param primaryOwner
-     * @param penaltyFee
      * @param status
-     * @param creationDate
      * @param creditLimit
      * @param interestRate
      */
-    public CreditCard(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee, Status status,
-                      LocalDate creationDate, Money creditLimit, BigDecimal interestRate) {
-        super(balance, secretKey, primaryOwner, penaltyFee, status, creationDate);
+    public CreditCard(Money balance, String secretKey, AccountHolder primaryOwner, Status status,
+                      Money creditLimit, BigDecimal interestRate) {
+        super(balance, secretKey, primaryOwner, status);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
     }
 
     /**
      * CreditCard Account Constructor with two owners, specifying balance, secret key, primary owner and penalty fee,
-     * status, creation date, credit limit and interest rate. If status is null, is assigned by default Status.ACTIVE. If creation date is null,
-     * is assigned by default the current date.
+     * status, creation date, credit limit and interest rate. If status is null, is assigned by default Status.ACTIVE.
+     *Creation date is assigned by default the current date.
      *
      * @param balance
      * @param secretKey
      * @param primaryOwner
      * @param secondaryOwner
-     * @param penaltyFee
      * @param status
-     * @param creationDate
      * @param creditLimit
      * @param interestRate
      */
     public CreditCard(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
-                      BigDecimal penaltyFee, Status status, LocalDate creationDate, Money creditLimit, BigDecimal interestRate) {
-        super(balance, secretKey, primaryOwner, secondaryOwner, penaltyFee, status, creationDate);
+                      Status status, Money creditLimit,
+                      BigDecimal interestRate) {
+        super(balance, secretKey, primaryOwner, secondaryOwner, status);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
     }
@@ -129,9 +131,13 @@ public class CreditCard extends Account {
         }
     }
 
-    // Getter and Setter interestRate
-    public BigDecimal getInterestRate() {
-        return interestRate;
+    // Getter and Setter Interest Add Date
+    public LocalDate getInterestAddDate() {
+        return interestAddDate;
+    }
+
+    public void setInterestAddDate(LocalDate interestAddDate) {
+        this.interestAddDate = interestAddDate;
     }
 
     /**
@@ -148,5 +154,22 @@ public class CreditCard extends Account {
         }
 
     }
+
+    @Override
+    public void interest() {
+        if (Period.between(getCreationDate(), LocalDate.now()).getMonths() == 1){
+            getBalance().increaseAmount(interestRate.divide(BigDecimal.valueOf(12)).multiply(getBalance().getAmount()));
+            setInterestAddDate(LocalDate.now());
+        } else if (Period.between(getInterestAddDate(), LocalDate.now()).getYears() == 1) {
+            getBalance().increaseAmount(interestRate.divide(BigDecimal.valueOf(12)).multiply(getBalance().getAmount()));
+            setInterestAddDate(LocalDate.now());
+        }
+    }
+
+
+/*Interest on credit cards is added to the balance monthly. If you have a 12% interest rate (0.12)
+    then 1% interest will be added to the account monthly. When the balance of a credit card is accessed,
+    check to determine if it has been 1 month or more since the account was created or since interested was added,
+    and if so, add the appropriate interest to the balance.*/
 
 }

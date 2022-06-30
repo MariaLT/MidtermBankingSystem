@@ -2,24 +2,26 @@ package com.ironhack.MidtermBankingSystem.models.accounts;
 
 import com.ironhack.MidtermBankingSystem.auxiliary.Money;
 import com.ironhack.MidtermBankingSystem.enums.Status;
+import com.ironhack.MidtermBankingSystem.interfaces.Penalty;
 import com.ironhack.MidtermBankingSystem.models.users.AccountHolder;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
-public class Checking extends Account {
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "amount", column = @Column(name = "minimum_balance_amount")),
-            @AttributeOverride(name = "currency", column = @Column(name = "minimum_balance_currency")),
-    })
-    private Money minimumBalance;
+public class Checking extends Account implements Penalty {
 
-    private BigDecimal monthlyMaintenanceFee;
+
+    @DecimalMin(value = "250", message = "The balance should be as minimal 250")
+    private final static BigDecimal minimumBalance = BigDecimal.valueOf(250);
+
+    @DecimalMin(value = "12", message = "The monthly maintenance fee should be as minimal 12")
+    private final static BigDecimal monthlyMaintenanceFee = BigDecimal.valueOf(12);
 
     /**
      * Empty constructor
@@ -29,9 +31,9 @@ public class Checking extends Account {
     }
 
     /**
-     * Checking Account Constructor with one owner, specifying balance, secret key, primary owner and penalty fee,
-     * status, creation date, minimum balance and monthly maintenance fee. If status is null, is assigned by default
-     * Status.ACTIVE. If creation date is null, is assigned by default the current date.
+     * Checking Account Constructor with one owner, specifying balance, secret key, primary owner,
+     * status, creation date. If status is null, is assigned by default
+     * Status.ACTIVE. Creation date is assigned by default the current date.
      *
      * When creating a new Checking account, if the primaryOwner is less than 24, a StudentChecking account will be
      * created otherwise a regular Checking Account will be created.
@@ -39,27 +41,17 @@ public class Checking extends Account {
      * @param balance
      * @param secretKey
      * @param primaryOwner
-     * @param penaltyFee
      * @param status
-     * @param creationDate
-     * @param minimumBalance
-     * @param monthlyMaintenanceFee
      */
-    public Checking(Money balance, String secretKey, AccountHolder primaryOwner, BigDecimal penaltyFee, Status status, LocalDate creationDate, Money minimumBalance, BigDecimal monthlyMaintenanceFee) {
-        super(balance, secretKey, primaryOwner, penaltyFee, status, creationDate);
-        if (Period.between(primaryOwner.getDateOfBirth(), LocalDate.now()).getYears() < 24) {
-            System.out.println("A StudentChecking account should be created, this" +
-                    "account does not have minimum balance neither monthly maintenance fee");
-        } else {
-            this.minimumBalance = minimumBalance;
-            this.monthlyMaintenanceFee = monthlyMaintenanceFee;
-        }
+    public Checking(Money balance, String secretKey, AccountHolder primaryOwner, Status status) {
+        super(balance, secretKey, primaryOwner, status);
+        setBalance(balance);
     }
 
     /**
-     * Checking Account Constructor with one owner, specifying balance, secret key, primary owner and penalty fee,
-     * status, creation date, minimum balance and monthly maintenance fee. If status is null, is assigned by default Status.ACTIVE. If creation date is null,
-     * is assigned by default the current date.
+     * Checking Account Constructor with one owner, specifying balance, secret key, primary owner,
+     * status, creation date. If status is null, is assigned by default
+     * Status.ACTIVE. Creation date is assigned by default the current date.
      *
      * When creating a new Checking account, if the primaryOwner is less than 24, a StudentChecking account will be
      * created otherwise a regular Checking Account will be created.
@@ -68,25 +60,31 @@ public class Checking extends Account {
      * @param secretKey
      * @param primaryOwner
      * @param secondaryOwner
-     * @param penaltyFee
      * @param status
-     * @param creationDate
-     * @param minimumBalance
-     * @param monthlyMaintenanceFee
      */
-    public Checking(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal penaltyFee, Status status, LocalDate creationDate, Money minimumBalance, BigDecimal monthlyMaintenanceFee) {
-        super(balance, secretKey, primaryOwner, secondaryOwner, penaltyFee, status, creationDate);
-        if (Period.between(primaryOwner.getDateOfBirth(), LocalDate.now()).getYears() < 24) {
-            System.out.println("A StudentChecking account should be created, this" +
-                    "account does not have minimum balance neither monthly maintenance fee");
-        } else {
-            this.minimumBalance = minimumBalance;
-            this.monthlyMaintenanceFee = monthlyMaintenanceFee;
-        }
+    public Checking(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+                    Status status) {
+        super(balance, secretKey, primaryOwner, secondaryOwner, status);
+
     }
 
 
+    @Override
+    public void setBalance(Money balance) {
+        if (balance.getAmount().compareTo(minimumBalance)==-1){
+            super.setBalance(null);
+        } else {
+            super.setBalance(balance);
+        }
 
-    /*
-    Checking accounts should have a minimumBalance of 250 and a monthlyMaintenanceFee of 12*/
+    }
+
+    /**
+     * Deduce a penalty fee from the balance, when the account drop below the minimum balance.
+     */
+    public void penaltyFee(){
+        if (getBalance().getAmount().compareTo(minimumBalance)==-1){
+            getBalance().decreaseAmount(PENALTY_FEE);
+        }
+    }
 }
