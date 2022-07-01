@@ -1,5 +1,6 @@
 package com.ironhack.MidtermBankingSystem.controller.impl.users;
 
+import com.ironhack.MidtermBankingSystem.controller.dto.AccountHolderBasicInfoDTO;
 import com.ironhack.MidtermBankingSystem.controller.interfaces.users.AccountHolderController;
 import com.ironhack.MidtermBankingSystem.models.users.AccountHolder;
 import com.ironhack.MidtermBankingSystem.repository.users.AccountHolderRepository;
@@ -24,8 +25,8 @@ public class AccountHolderControllerImpl implements AccountHolderController {
 
     @GetMapping("/accountHolders")
     @ResponseStatus(HttpStatus.OK)
-    public List<AccountHolder> listAccountHolders() {
-        return accountHolderRepository.findAll();
+    public List<AccountHolderBasicInfoDTO> listAccountHoldersBasicInfo() {
+        return accountHolderService.accountHolderList();
     }
 
     @PostMapping("/accountHolders")
@@ -33,6 +34,7 @@ public class AccountHolderControllerImpl implements AccountHolderController {
     public AccountHolder createAccountHolder(AccountHolder accountHolder) {
         return accountHolderRepository.save(accountHolderService.createAccountHolder(accountHolder));
     }
+
 
 
 }
