@@ -167,9 +167,4 @@ public class CreditCard extends Account implements Interest {
     }
 
 
-/*Interest on credit cards is added to the balance monthly. If you have a 12% interest rate (0.12)
-    then 1% interest will be added to the account monthly. When the balance of a credit card is accessed,
-    check to determine if it has been 1 month or more since the account was created or since interested was added,
-    and if so, add the appropriate interest to the balance.*/
-
 }

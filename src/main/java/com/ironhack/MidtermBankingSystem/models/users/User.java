@@ -1,5 +1,7 @@
 package com.ironhack.MidtermBankingSystem.models.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -13,6 +15,7 @@ public class User {
         private String username;
         private String password;
 
+        @JsonIgnore
         @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
         private Set<Role> roles;
 

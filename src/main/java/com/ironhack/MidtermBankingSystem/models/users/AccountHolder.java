@@ -1,6 +1,7 @@
 package com.ironhack.MidtermBankingSystem.models.users;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ironhack.MidtermBankingSystem.auxiliary.Address;
 import com.ironhack.MidtermBankingSystem.models.accounts.Account;
 
@@ -37,9 +38,10 @@ public class AccountHolder extends User{
     @Pattern(regexp = "^(.+)@(.+)$", message = "Mail address not valid")
     private String mailingAddress; // regex
 
+    @JsonIgnore
     @OneToMany(mappedBy = "primaryOwner")
     private Set<Account> primaryOwnerAccount;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "secondaryOwner")
     private Set<Account> secundaryOwnerAccount;
 

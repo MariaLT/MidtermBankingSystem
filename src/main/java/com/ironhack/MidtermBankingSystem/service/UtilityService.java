@@ -1,9 +1,15 @@
 package com.ironhack.MidtermBankingSystem.service;
 
+import com.ironhack.MidtermBankingSystem.auxiliary.Money;
+import com.ironhack.MidtermBankingSystem.models.accounts.Saving;
 import com.ironhack.MidtermBankingSystem.repository.accounts.AccountRepository;
+import com.ironhack.MidtermBankingSystem.repository.accounts.SavingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -13,13 +19,14 @@ public class UtilityService {
 
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    SavingRepository savingRepository;
 
 
     public UtilityService() {
     }
 
     /**
-     *
      * @return
      */
     public Long randomId() {
@@ -40,4 +47,20 @@ public class UtilityService {
         return randomId;
     }
 
+    public void interest(Long id, SavingRepository savingRepository) {
+        Saving saving = savingRepository.findById(id).get();
+        if (Period.between(saving.getCreationDate(), LocalDate.now()).getYears() == 1) {
+            saving.setBalance(new Money(saving.getBalance().increaseAmount(saving.getInterestRate().
+                    multiply(saving.getBalance().
+                    getAmount()))));
+            saving.setInterestAddDate(LocalDate.now());
+            savingRepository.save(saving);
+        } else if (Period.between(saving.getInterestAddDate(), LocalDate.now()).getYears() == 1) {
+            saving.setBalance(new Money(saving.getBalance().increaseAmount(saving.getInterestRate().
+                    multiply(saving.getBalance().
+                            getAmount()))));
+            saving.setInterestAddDate(LocalDate.now());
+            savingRepository.save(saving);
+        }
+    }
 }

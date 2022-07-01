@@ -24,8 +24,9 @@ public class SecurityConfiguration {
         http.httpBasic(); // Vamos a utilizar basic auth
         http.csrf().disable(); // Desactivamos la protección CSRF porque nosotros no vamos a manejar el HTML
         http.authorizeRequests() // Vamos a estacler la protección de cada endpoint individualmente
-                .antMatchers(HttpMethod.POST, "/accountHolders").authenticated() // solo usuarios autenticados
-                .antMatchers(HttpMethod.POST, "/accountHolders").hasRole("ADMIN") // Solo ADMIN
+                .antMatchers(HttpMethod.GET, "/accountHolders").hasRole("ADMIN") // solo usuarios autenticados
+//                .antMatchers(HttpMethod.POST, "/accountHolders").hasRole("ADMIN") // Solo ADMIN
+                //.antMatchers(HttpMethod.GET, "/accountHolders").hasRole("ADMIN")
                 //.antMatchers(").hasAnyRole("OWNERS") // Solo ADMIN y TECHNICIAN
                 .anyRequest().permitAll(); // El resto de los enpoints son públicos
         return http.build();

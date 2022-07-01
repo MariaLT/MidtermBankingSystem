@@ -11,9 +11,9 @@ import javax.persistence.*;
 @Embeddable
 public class Address {
     private String street;
-    private short number;
-    private byte floor;
-    private char door;
+    private int number;
+    private int floor;
+    private String door;
     private int zipCode; // regex¿?
     private String city;
     private String country;
@@ -22,7 +22,8 @@ public class Address {
     public Address() {
     }
 
-    public Address(String street, short number, byte floor, char door, int zipCode, String city, String country) {
+    public Address(String street, int number, int floor, String door, int zipCode,
+                   String city, String country) {
         this.street = street;
         this.number = number;
         this.floor = floor;
@@ -40,27 +41,27 @@ public class Address {
         this.street = street;
     }
 
-    public short getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(short number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 
-    public byte getFloor() {
+    public int getFloor() {
         return floor;
     }
 
-    public void setFloor(byte floor) {
+    public void setFloor(int floor) {
         this.floor = floor;
     }
 
-    public char getDoor() {
+    public String getDoor() {
         return door;
     }
 
-    public void setDoor(char door) {
+    public void setDoor(String door) {
         this.door = door;
     }
 
