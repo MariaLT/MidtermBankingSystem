@@ -35,17 +35,14 @@ public class Checking extends Account implements Penalty {
      * status, creation date. If status is null, is assigned by default
      * Status.ACTIVE. Creation date is assigned by default the current date.
      *
-     * When creating a new Checking account, if the primaryOwner is less than 24, a StudentChecking account will be
-     * created otherwise a regular Checking Account will be created.
      *
      * @param balance
      * @param secretKey
      * @param primaryOwner
      * @param status
      */
-    public Checking(Money balance, String secretKey, AccountHolder primaryOwner, Status status) {
-        super(balance, secretKey, primaryOwner, status);
-        setBalance(balance);
+    public Checking(Long id, Money balance, String secretKey, AccountHolder primaryOwner, Status status, LocalDate creationDate) {
+        super(id, balance, secretKey, primaryOwner, status, creationDate);
     }
 
     /**
@@ -53,8 +50,6 @@ public class Checking extends Account implements Penalty {
      * status, creation date. If status is null, is assigned by default
      * Status.ACTIVE. Creation date is assigned by default the current date.
      *
-     * When creating a new Checking account, if the primaryOwner is less than 24, a StudentChecking account will be
-     * created otherwise a regular Checking Account will be created.
      *
      * @param balance
      * @param secretKey
@@ -62,11 +57,11 @@ public class Checking extends Account implements Penalty {
      * @param secondaryOwner
      * @param status
      */
-    public Checking(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
-                    Status status) {
-        super(balance, secretKey, primaryOwner, secondaryOwner, status);
-
+    public Checking(Long id, Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+                    Status status, LocalDate creationDate) {
+        super(id, balance, secretKey, primaryOwner, secondaryOwner, status, creationDate);
     }
+
 
 
     @Override

@@ -28,7 +28,7 @@ class SavingRepositoryTest {
     AccountHolder accountHolder = new AccountHolder(1L, "OWNER_1",
             "$2a$10$dnMdFNuM6R6.0QNMROCfYOlAHU.eM4kqw.04PEbLP7E.qjI3wPbsq",
             "Sofía", LocalDate.of(1991, 07, 22), address, "sofia@sofia.com");
-    Saving saving = new Saving(new Money(BigDecimal.valueOf(2000)), "romero", accountHolder, Status.ACTIVE,
+    Saving saving = new Saving(4l, new Money(BigDecimal.valueOf(2000)), "romero", accountHolder, Status.ACTIVE, null,
             BigDecimal.valueOf(0.0025));
 
     /*   public Address(String street, short number, byte floor, String door, int zipCode,

@@ -32,23 +32,20 @@ public class AccountControllerImpl implements AccountController {
     @PostMapping("/savings")
     @ResponseStatus(HttpStatus.CREATED)
     public Saving createSavingAccount(@RequestBody @Valid Saving saving) {
-        return savingRepository.save(saving);
+
+        return savingRepository.save(accountService.createSavingAccount(saving));
     }
 
     @PostMapping("/checkings")
     @ResponseStatus(HttpStatus.CREATED)
-    public Account createCheckingAccount(@RequestBody @Valid Account account) {
-        if (accountService.createChekingsAccount(account).getClass() == Checking.class) {
-            return checkingRepository.save((Checking) accountService.createChekingsAccount(account));
-        }else{
-            return studentCheckingRepository.save((StudentChecking) accountService.createChekingsAccount(account));
-        }
+    public void createCheckingAccount(@RequestBody @Valid Account account) {
+        accountService.createChekingsAccount(account);
     }
 
     @PostMapping("/creditcards")
     @ResponseStatus(HttpStatus.CREATED)
     public CreditCard createCreditCardAccount(@RequestBody @Valid CreditCard creditCard) {
-        return creditCardRepository.save(creditCard);
+        return creditCardRepository.save(accountService.createCreditCardAccount(creditCard));
     }
 
 

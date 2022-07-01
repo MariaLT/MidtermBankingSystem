@@ -83,9 +83,9 @@ public class CreditCard extends Account implements Interest {
      * @param creditLimit
      * @param interestRate
      */
-    public CreditCard(Money balance, String secretKey, AccountHolder primaryOwner, Status status,
-                      Money creditLimit, BigDecimal interestRate) {
-        super(balance, secretKey, primaryOwner, status);
+    public CreditCard(Long id, Money balance, String secretKey, AccountHolder primaryOwner, Status status,
+                      LocalDate creationDate, Money creditLimit, BigDecimal interestRate) {
+        super(id, balance, secretKey, primaryOwner, status, creationDate);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
     }
@@ -103,10 +103,10 @@ public class CreditCard extends Account implements Interest {
      * @param creditLimit
      * @param interestRate
      */
-    public CreditCard(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
-                      Status status, Money creditLimit,
+    public CreditCard(Long id, Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+                      Status status, LocalDate creationDate, Money creditLimit,
                       BigDecimal interestRate) {
-        super(balance, secretKey, primaryOwner, secondaryOwner, status);
+        super(id, balance, secretKey, primaryOwner, secondaryOwner, status, creationDate);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
     }

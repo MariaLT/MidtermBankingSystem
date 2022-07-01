@@ -7,8 +7,12 @@ import com.ironhack.MidtermBankingSystem.models.users.AccountHolder;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Entity
 @Table(name = "account_table")
@@ -18,6 +22,7 @@ public class Account {
     @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
+    @Digits(integer = 18, fraction = 0)
     private Long id;
     @Embedded
     @AttributeOverrides({
@@ -34,7 +39,6 @@ public class Account {
     @JoinColumn(name = "secondary_owner")
     private AccountHolder secondaryOwner;
 
-    private static UtilityService utilityService;
 
     /**
      * ¿Por qué no me deja?
@@ -63,14 +67,14 @@ public class Account {
      * @param primaryOwner
      * @param status
      */
-    public Account(Money balance, String secretKey, AccountHolder primaryOwner,
-                   Status status) {
-        this.id = utilityService.randomId();
+    public Account(Long id, Money balance, String secretKey, AccountHolder primaryOwner,
+                   Status status, LocalDate creationDate) {
+        setId(id);
         this.balance = balance;
         this.secretKey = secretKey;
         this.primaryOwner = primaryOwner;
         setStatus(status);
-        this.creationDate = LocalDate.now();
+        setCreationDate(creationDate);
     }
 
 
@@ -85,15 +89,15 @@ public class Account {
      * @param secondaryOwner
      * @param status
      */
-    public Account(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
-                   Status status) {
-        this.id = utilityService.randomId();
+    public Account(Long id, Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+                   Status status, LocalDate creationDate) {
+        setId(id);
         this.balance = balance;
         this.secretKey = secretKey;
         this.primaryOwner = primaryOwner;
         this.secondaryOwner = secondaryOwner;
         setStatus(status);
-        this.creationDate = LocalDate.now();
+        setCreationDate(creationDate);
     }
 
     // Getter and Setter ID
@@ -101,7 +105,16 @@ public class Account {
         return id;
     }
 
-
+    public void setId(Long id) {
+        Random random = new Random();
+        boolean loop = true;
+        while (loop) {
+            this.id = random.nextLong();
+            if (String.valueOf(this.id).length()==18){
+                loop=false;
+            }
+        }
+    }
     // Getter and Setter Balance
     public Money getBalance() {
         return balance;
@@ -158,7 +171,7 @@ public class Account {
     }
 
     public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
+        this.creationDate = LocalDate.now();
     }
 
 

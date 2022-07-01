@@ -78,9 +78,9 @@ public class Saving extends Account implements Interest, Penalty {
      * @param status
      * @param interestRate
      */
-    public Saving(Money balance, String secretKey, AccountHolder primaryOwner,
-                  Status status, BigDecimal interestRate) {
-        super(balance, secretKey, primaryOwner, status);
+    public Saving(Long id, Money balance, String secretKey, AccountHolder primaryOwner,
+                  Status status, LocalDate creationDate, BigDecimal interestRate) {
+        super(id, balance, secretKey, primaryOwner, status, creationDate);
         setBalance(balance);
         setInterestRate(interestRate);
         this.interestAddDate = null;
@@ -99,9 +99,9 @@ public class Saving extends Account implements Interest, Penalty {
      * @param status
      * @param interestRate
      */
-    public Saving(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
-                  Status status, BigDecimal interestRate) {
-        super(balance, secretKey, primaryOwner, secondaryOwner, status);
+    public Saving(Long id,Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+                  Status status, LocalDate creationDate, BigDecimal interestRate) {
+        super(id,balance, secretKey, primaryOwner, secondaryOwner, status, creationDate);
         setBalance(balance);
         setInterestRate(interestRate);
         this.interestAddDate = null;

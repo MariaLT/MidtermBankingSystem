@@ -9,7 +9,7 @@ public interface AccountController {
 
     Saving createSavingAccount(Saving saving);
 
-    Account createCheckingAccount(Account account);
+    void createCheckingAccount(Account account);
 
     CreditCard createCreditCardAccount(CreditCard creditCard);
 

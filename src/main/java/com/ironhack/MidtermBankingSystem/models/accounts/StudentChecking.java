@@ -29,9 +29,9 @@ public class StudentChecking extends Account {
      * @param primaryOwner
      * @param status
      */
-    public StudentChecking(Money balance, String secretKey, AccountHolder primaryOwner, Status status,
+    public StudentChecking(Long id, Money balance, String secretKey, AccountHolder primaryOwner, Status status,
                            LocalDate creationDate) {
-        super(balance, secretKey, primaryOwner, status);
+        super(id, balance, secretKey, primaryOwner, status, creationDate);
     }
 
 
@@ -46,9 +46,9 @@ public class StudentChecking extends Account {
      * @param secondaryOwner
      * @param status
      */
-    public StudentChecking(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+    public StudentChecking(Long id, Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
                            Status status, LocalDate creationDate) {
-        super(balance, secretKey, primaryOwner, secondaryOwner, status);
+        super(id, balance, secretKey, primaryOwner, secondaryOwner, status, creationDate);
     }
 
 
