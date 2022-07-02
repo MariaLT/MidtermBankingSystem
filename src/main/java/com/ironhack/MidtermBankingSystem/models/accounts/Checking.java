@@ -14,12 +14,19 @@ import java.time.Period;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
-public class Checking extends Account implements Penalty {
+public class Checking extends Account {
 
-
+    /**
+     *  Minimum balance:
+     *  250
+     */
     @DecimalMin(value = "250", message = "The balance should be as minimal 250")
-    private final static BigDecimal minimumBalance = BigDecimal.valueOf(250);
+    public final static BigDecimal minimumBalance = BigDecimal.valueOf(250);
 
+    /**
+     * Minimum monthly maintenance fee:
+     * 12
+     */
     @DecimalMin(value = "12", message = "The monthly maintenance fee should be as minimal 12")
     private final static BigDecimal monthlyMaintenanceFee = BigDecimal.valueOf(12);
 
@@ -31,24 +38,9 @@ public class Checking extends Account implements Penalty {
     }
 
     /**
-     * Checking Account Constructor with one owner, specifying balance, secret key, primary owner,
-     * status, creation date. If status is null, is assigned by default
-     * Status.ACTIVE. Creation date is assigned by default the current date.
-     *
-     *
-     * @param balance
-     * @param secretKey
-     * @param primaryOwner
-     * @param status
-     */
-    public Checking(Long id, Money balance, String secretKey, AccountHolder primaryOwner, Status status, LocalDate creationDate) {
-        super(id, balance, secretKey, primaryOwner, status, creationDate);
-    }
-
-    /**
-     * Checking Account Constructor with one owner, specifying balance, secret key, primary owner,
-     * status, creation date. If status is null, is assigned by default
-     * Status.ACTIVE. Creation date is assigned by default the current date.
+     * Constructor with two owners, specifying balance, secret key, primary owner, optional secondary owner, status and
+     * creation date. If status is null, is assigned by default Status.ACTIVE. Creation date is assigned
+     * by default the current date.
      *
      *
      * @param balance
@@ -62,8 +54,12 @@ public class Checking extends Account implements Penalty {
         super(id, balance, secretKey, primaryOwner, secondaryOwner, status, creationDate);
     }
 
-
-
+/*
+    *//**
+     * Checking accounts should have a minimum balance, if the balance if less than the minimum,
+     * the value for the balance
+     * @param balance
+     *//*
     @Override
     public void setBalance(Money balance) {
         if (balance.getAmount().compareTo(minimumBalance)==-1){
@@ -72,14 +68,7 @@ public class Checking extends Account implements Penalty {
             super.setBalance(balance);
         }
 
-    }
+    }*/
 
-    /**
-     * Deduce a penalty fee from the balance, when the account drop below the minimum balance.
-     */
-    public void penaltyFee(){
-        if (getBalance().getAmount().compareTo(minimumBalance)==-1){
-            getBalance().decreaseAmount(PENALTY_FEE);
-        }
-    }
+
 }

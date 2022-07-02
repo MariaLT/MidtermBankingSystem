@@ -14,7 +14,7 @@ import java.time.Period;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
-public class Saving extends Account implements Interest, Penalty {
+public class Saving extends Account {
 
 
 
@@ -66,30 +66,9 @@ public class Saving extends Account implements Interest, Penalty {
 
     }
 
-
     /**
-     * Saving Account Constructor with one owner, specifying balance, secret key, primary owner,
-     * status, creation date and interest rate. If status is null, is assigned by default Status.ACTIVE.
-     * Creation date is assigned by default the current date.
-     *
-     * @param balance
-     * @param secretKey
-     * @param primaryOwner
-     * @param status
-     * @param interestRate
-     */
-    public Saving(Long id, Money balance, String secretKey, AccountHolder primaryOwner,
-                  Status status, LocalDate creationDate, BigDecimal interestRate) {
-        super(id, balance, secretKey, primaryOwner, status, creationDate);
-        setBalance(balance);
-        setInterestRate(interestRate);
-        this.interestAddDate = null;
-    }
-
-
-    /**
-     * Saving Account Constructor with two owners, specifying balance, secret key, primary owner, secondary owner
-     * and penalty fee, status, creation date and interest rate. If status is null, is assigned
+     * Constructor with two owners, specifying balance, secret key, primary owner, optional secondary owner,
+     * status, creation date and interest rate. If status is null, is assigned
      * by default Status.ACTIVE. Creation date is assigned by default the current date.
      *
      * @param balance

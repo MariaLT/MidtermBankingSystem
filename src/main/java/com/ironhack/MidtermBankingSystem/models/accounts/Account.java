@@ -1,7 +1,6 @@
 package com.ironhack.MidtermBankingSystem.models.accounts;
 
 import com.ironhack.MidtermBankingSystem.auxiliary.Money;
-import com.ironhack.MidtermBankingSystem.service.UtilityService;
 import com.ironhack.MidtermBankingSystem.enums.Status;
 import com.ironhack.MidtermBankingSystem.models.users.AccountHolder;
 
@@ -10,8 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 @Entity
@@ -41,8 +38,8 @@ public class Account {
 
 
     /**
-     * ¿Por qué no me deja?
-     * {@value BigDecimal.valueOf(40)}
+     * Penalty fee for all accounts:
+     * 40
      */
     public static final BigDecimal PENALTY_FEE = BigDecimal.valueOf(40);
 
@@ -57,29 +54,9 @@ public class Account {
     public Account() {
     }
 
-    /**
-     * Constructor with one owner, specifying balance, secret key, primary owner, status
-     * and creation date. If status is null, is assigned by default Status.ACTIVE. Creation date is assigned
-     * by default the current date.
-     *
-     * @param balance
-     * @param secretKey
-     * @param primaryOwner
-     * @param status
-     */
-    public Account(Long id, Money balance, String secretKey, AccountHolder primaryOwner,
-                   Status status, LocalDate creationDate) {
-        setId(id);
-        this.balance = balance;
-        this.secretKey = secretKey;
-        this.primaryOwner = primaryOwner;
-        setStatus(status);
-        setCreationDate(creationDate);
-    }
-
 
     /**
-     * Constructor with two owners, specifying balance, secret key, primary owner, secondary owner, status and
+     * Constructor with two owners, specifying balance, secret key, primary owner, optional secondary owner, status and
      * creation date. If status is null, is assigned by default Status.ACTIVE. Creation date is assigned
      * by default the current date.
      *

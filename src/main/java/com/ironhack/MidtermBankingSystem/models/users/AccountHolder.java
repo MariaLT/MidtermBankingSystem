@@ -7,6 +7,7 @@ import com.ironhack.MidtermBankingSystem.models.accounts.Account;
 
 import javax.persistence.*;
 import javax.print.attribute.standard.MediaSize;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.Set;
@@ -21,6 +22,8 @@ public class AccountHolder extends User{
 
     @Column(name = "first_name")
     private String name;
+
+    @NotNull
     private LocalDate dateOfBirth;
 
     @Embedded
@@ -35,8 +38,7 @@ public class AccountHolder extends User{
     })
     private Address primaryAddress;
 
-    // tengo que añadir el .com o .algo
-    @Pattern(regexp = "^(.+)@(.+)$", message = "Mail address not valid")
+    @Pattern(regexp = "^(.+)@(.+).[a-z]$", message = "Mail address not valid")
     private String mailingAddress; // regex
 
     @JsonIgnore

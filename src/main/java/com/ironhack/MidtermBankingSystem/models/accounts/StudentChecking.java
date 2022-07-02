@@ -20,23 +20,7 @@ public class StudentChecking extends Account {
     }
 
     /**
-     * Constructor with one owner, specifying balance, secret key, primary owner, status
-     * and creation date. If status is null, is assigned by default Status.ACTIVE. Creation date is assigned
-     * by default the current date.
-     *
-     * @param balance
-     * @param secretKey
-     * @param primaryOwner
-     * @param status
-     */
-    public StudentChecking(Long id, Money balance, String secretKey, AccountHolder primaryOwner, Status status,
-                           LocalDate creationDate) {
-        super(id, balance, secretKey, primaryOwner, status, creationDate);
-    }
-
-
-    /**
-     * Constructor with two owners, specifying balance, secret key, primary owner, secondary owner, status and
+     * Constructor with two owners, specifying balance, secret key, primary owner, optional secondary owner, status and
      * creation date. If status is null, is assigned by default Status.ACTIVE. Creation date is assigned
      * by default the current date.
      *

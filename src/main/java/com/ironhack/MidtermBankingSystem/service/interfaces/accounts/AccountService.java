@@ -2,6 +2,7 @@ package com.ironhack.MidtermBankingSystem.service.interfaces.accounts;
 
 import com.ironhack.MidtermBankingSystem.enums.Status;
 import com.ironhack.MidtermBankingSystem.models.accounts.*;
+import com.ironhack.MidtermBankingSystem.repository.accounts.SavingRepository;
 
 public interface AccountService {
 
@@ -12,4 +13,8 @@ public interface AccountService {
     CreditCard createCreditCardAccount(CreditCard creditCard);
 
     void updateStatusAccount(Long id, Status status);
+
+    void applyInterestSavingAccount();
+
+    void applyInterestCreditCard();
 }

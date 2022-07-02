@@ -2,7 +2,6 @@ package com.ironhack.MidtermBankingSystem.controller.impl.accounts;
 
 import com.ironhack.MidtermBankingSystem.controller.dto.AccountStatusDTO;
 import com.ironhack.MidtermBankingSystem.controller.interfaces.accounts.AccountController;
-import com.ironhack.MidtermBankingSystem.enums.Status;
 import com.ironhack.MidtermBankingSystem.models.accounts.*;
 import com.ironhack.MidtermBankingSystem.repository.accounts.CheckingRepository;
 import com.ironhack.MidtermBankingSystem.repository.accounts.CreditCardRepository;
@@ -68,6 +67,19 @@ public class AccountControllerImpl implements AccountController {
     public void updateStatusAccount(@PathVariable Long id,
                                     @RequestBody @Valid AccountStatusDTO accountStatusDTO){
         accountService.updateStatusAccount(id, accountStatusDTO.getStatus());
+
+    }
+
+    @PatchMapping("/accounts/savinginterest")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void applyInterestSavingAccount() {
+        accountService.applyInterestSavingAccount();
+    }
+
+    @PatchMapping("/accounts/creditcardinterest")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void applyInterestCreditCard() {
+        accountService.applyInterestCreditCard();
     }
 }
 

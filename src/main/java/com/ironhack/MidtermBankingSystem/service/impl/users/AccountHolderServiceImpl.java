@@ -60,4 +60,6 @@ public class AccountHolderServiceImpl implements AccountHolderService {
 
         return accountHolderBasicInfoDTOList;
     }
+
+
 }

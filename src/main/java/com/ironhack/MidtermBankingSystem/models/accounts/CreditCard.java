@@ -12,7 +12,7 @@ import java.time.Period;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
-public class CreditCard extends Account implements Interest {
+public class CreditCard extends Account {
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "amount", column = @Column(name = "credit_limit_amount")),
@@ -72,27 +72,7 @@ public class CreditCard extends Account implements Interest {
     }
 
     /**
-     * CreditCard Account Constructor with one owner, specifying balance, secret key, primary owner,
-     * status, creation date, credit limit and interest rate. If status is null, is assigned by default Status.ACTIVE.
-     * Creation date is assigned by default the current date.
-     *
-     * @param balance
-     * @param secretKey
-     * @param primaryOwner
-     * @param status
-     * @param creditLimit
-     * @param interestRate
-     */
-    public CreditCard(Long id, Money balance, String secretKey, AccountHolder primaryOwner, Status status,
-                      LocalDate creationDate, Money creditLimit, BigDecimal interestRate, LocalDate interestAddDate) {
-        super(id, balance, secretKey, primaryOwner, status, creationDate);
-        setCreditLimit(creditLimit);
-        setInterestRate(interestRate);
-        setInterestAddDate(interestAddDate);
-    }
-
-    /**
-     * CreditCard Account Constructor with two owners, specifying balance, secret key, primary owner and penalty fee,
+     * Constructor with two owners, specifying balance, secret key, primary owner, optional secondary owner,
      * status, creation date, credit limit and interest rate. If status is null, is assigned by default Status.ACTIVE.
      *Creation date is assigned by default the current date.
      *
@@ -160,16 +140,7 @@ public class CreditCard extends Account implements Interest {
 
     }
 
-    @Override
-    public void interest() {
-        if (Period.between(getCreationDate(), LocalDate.now()).getMonths() == 1){
-            getBalance().increaseAmount(interestRate.divide(BigDecimal.valueOf(12)).multiply(getBalance().getAmount()));
-            setInterestAddDate(LocalDate.now());
-        } else if (Period.between(getInterestAddDate(), LocalDate.now()).getYears() == 1) {
-            getBalance().increaseAmount(interestRate.divide(BigDecimal.valueOf(12)).multiply(getBalance().getAmount()));
-            setInterestAddDate(LocalDate.now());
-        }
-    }
+
 
 
 }
