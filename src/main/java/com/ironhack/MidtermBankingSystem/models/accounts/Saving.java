@@ -56,7 +56,7 @@ public class Saving extends Account {
      */
     @DecimalMin(value = "100", message = "It may be instantiated with a minimum balance of less " +
             "than 1000 but no lower than 100" )
-    private final static BigDecimal MIN_BALANCE = BigDecimal.valueOf(100);
+    public final static BigDecimal MIN_BALANCE = BigDecimal.valueOf(100);
 
 
     /**
@@ -125,31 +125,6 @@ public class Saving extends Account {
         }
     }
 
-    /**
-     * Added to the account annually at the rate of specified interestRate per year.
-     */
-    public void interest(){
-        Money money;
-        if (Period.between(getCreationDate(), LocalDate.now()).getYears() == 1){
-
-            setBalance(new Money(getBalance().increaseAmount(interestRate.multiply(getBalance().getAmount()))));
-            setInterestAddDate(LocalDate.now());
-        } else if (Period.between(getInterestAddDate(), LocalDate.now()).getYears() == 1) {
-            setBalance(new Money(getBalance().increaseAmount(interestRate.multiply(getBalance().getAmount()))));
-            setInterestAddDate(LocalDate.now());
-        }
-    }
-
-    /*    public static void interest(Saving saving){
-        if (Period.between(saving.getCreationDate(), LocalDate.now()).getYears() == 1){
-            saving.getBalance().increaseAmount(saving.getInterestRate().multiply(saving.getBalance().
-                    getAmount()));
-            saving.setInterestAddDate(LocalDate.now());
-        } else if (Period.between(saving.getInterestAddDate(), LocalDate.now()).getYears() == 1) {
-            saving.getBalance().increaseAmount(saving.interestRate.multiply(saving.getBalance().getAmount()));
-            saving.setInterestAddDate(LocalDate.now());
-        }
-    }*/
     @Override
     public void setBalance(Money balance) {
         if (balance.getAmount().compareTo(MIN_BALANCE)==-1){

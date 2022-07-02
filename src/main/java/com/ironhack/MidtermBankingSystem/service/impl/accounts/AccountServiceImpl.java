@@ -44,13 +44,13 @@ public class AccountServiceImpl implements AccountService {
                     account.getPrimaryOwner(), account.getSecondaryOwner(), account.getStatus(), account.getCreationDate());
             studentCheckingRepository.save(studentChecking);
         } else {
-            if (account.getBalance().getAmount().compareTo(Checking.minimumBalance) == -1) {
+            if (account.getBalance().getAmount().compareTo(Checking.MINIMUM_BALANCE) == -1) {
                 new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Checking accounts should have " +
                         "a minimumBalance of 250");
             } else {
                 Checking checking = new Checking(account.getId(), account.getBalance(), account.getSecretKey(),
                         account.getPrimaryOwner(), account.getSecondaryOwner(),
-                        account.getStatus(), account.getCreationDate());
+                        account.getStatus(), account.getCreationDate(), null);
                 checkingRepository.save(checking);
             }
         }
@@ -135,15 +135,18 @@ public class AccountServiceImpl implements AccountService {
     public void applyInterestCreditCard() {
         List<CreditCard> creditCardList = creditCardRepository.findAll();
         for (CreditCard creditCard : creditCardList) {
-            if (Period.between(creditCard.getCreationDate(), LocalDate.now()).getYears() == 1) {
+            if (Period.between(creditCard.getCreationDate(), LocalDate.now()).getYears() >= 1
+                    && creditCard.getInterestAddDate() == null) {
+                BigDecimal years = BigDecimal.valueOf(Period.between(creditCard.getCreationDate(), LocalDate.now()).getYears());
                 creditCard.setBalance(new Money(creditCard.getBalance().increaseAmount(
-                        creditCard.getInterestRate().multiply(creditCard.getBalance().
+                        creditCard.getInterestRate().multiply(years).multiply(creditCard.getBalance().
                                 getAmount()))));
                 creditCard.setInterestAddDate(LocalDate.now());
                 creditCardRepository.save(creditCard);
-            } else if (Period.between(creditCard.getInterestAddDate(), LocalDate.now()).getYears() == 1) {
+            } else if (Period.between(creditCard.getInterestAddDate(), LocalDate.now()).getYears() >= 1) {
+                BigDecimal years = BigDecimal.valueOf(Period.between(creditCard.getInterestAddDate(), LocalDate.now()).getYears());
                 creditCard.setBalance(new Money(creditCard.getBalance().increaseAmount(
-                        creditCard.getInterestRate().multiply(creditCard.getBalance().
+                        creditCard.getInterestRate().multiply(years).multiply(creditCard.getBalance().
                                 getAmount()))));
                 creditCard.setInterestAddDate(LocalDate.now());
                 creditCardRepository.save(creditCard);
@@ -152,8 +155,30 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    @Override
+    public void monthlyMaintenanceFee() {
+        List<Checking> checkingList = checkingRepository.findAll();
+        for (Checking checking : checkingList) {
+            if (Period.between(checking.getCreationDate(), LocalDate.now()).getMonths() >= 1
+                    && checking.getDateMaintenanceFee() == null) {
+                BigDecimal months = BigDecimal.valueOf(Period.between(checking.getCreationDate(), LocalDate.now()).getMonths());
+                checking.setBalance(new Money(checking.getBalance().decreaseAmount(Checking.
+                        MONTHLY_MAINTENANCE_FEE.multiply(months))));
+                checking.setDateMaintenanceFee(LocalDate.now());
+                checkingRepository.save(checking);
+            } else if (Period.between(checking.getDateMaintenanceFee(), LocalDate.now()).getMonths() >= 1) {
+                BigDecimal months = BigDecimal.valueOf(Period.between(checking.getDateMaintenanceFee(), LocalDate.now()).getMonths());
+                checking.setBalance(new Money(checking.getBalance().decreaseAmount(Checking.
+                        MONTHLY_MAINTENANCE_FEE.multiply(months))));
+                checking.setDateMaintenanceFee(LocalDate.now());
+                checkingRepository.save(checking);
+            }
+        }
+    }
 
-    /*   *//**
+    /*  saving y checkin */
+
+    /**
      * Deduce a penalty fee from the balance, when the account drop below the minimum balance.
      *//*
     public void penaltyFee(){
@@ -161,4 +186,21 @@ public class AccountServiceImpl implements AccountService {
             getBalance().decreaseAmount(PENALTY_FEE);
         }
     }*/
+    @Override
+    public void penaltyFee() {
+        List<Saving> savingList = savingRepository.findAll();
+        List<Checking> checkingList = checkingRepository.findAll();
+        for (Saving saving : savingList) {
+            if (saving.getBalance().getAmount().compareTo(Saving.MIN_BALANCE) == -1) {
+                saving.setBalance(new Money(saving.getBalance().
+                        decreaseAmount(Saving.PENALTY_FEE)));
+            }
+        }
+        for (Checking checking : checkingList) {
+            if (checking.getBalance().getAmount().compareTo(Saving.MIN_BALANCE) == -1) {
+                checking.setBalance(new Money(checking.getBalance().
+                        decreaseAmount(Saving.PENALTY_FEE)));
+            }
+        }
+    }
 }

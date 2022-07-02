@@ -17,4 +17,8 @@ public interface AccountService {
     void applyInterestSavingAccount();
 
     void applyInterestCreditCard();
+
+    void monthlyMaintenanceFee();
+
+    void penaltyFee();
 }

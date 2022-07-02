@@ -2,15 +2,12 @@ package com.ironhack.MidtermBankingSystem.models.accounts;
 
 import com.ironhack.MidtermBankingSystem.auxiliary.Money;
 import com.ironhack.MidtermBankingSystem.enums.Status;
-import com.ironhack.MidtermBankingSystem.interfaces.Penalty;
 import com.ironhack.MidtermBankingSystem.models.users.AccountHolder;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
@@ -21,14 +18,16 @@ public class Checking extends Account {
      *  250
      */
     @DecimalMin(value = "250", message = "The balance should be as minimal 250")
-    public final static BigDecimal minimumBalance = BigDecimal.valueOf(250);
+    public final static BigDecimal MINIMUM_BALANCE = BigDecimal.valueOf(250);
 
     /**
      * Minimum monthly maintenance fee:
      * 12
      */
     @DecimalMin(value = "12", message = "The monthly maintenance fee should be as minimal 12")
-    private final static BigDecimal monthlyMaintenanceFee = BigDecimal.valueOf(12);
+    public final static BigDecimal MONTHLY_MAINTENANCE_FEE = BigDecimal.valueOf(12);
+
+    private LocalDate dateMaintenanceFee;
 
     /**
      * Empty constructor
@@ -50,25 +49,16 @@ public class Checking extends Account {
      * @param status
      */
     public Checking(Long id, Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
-                    Status status, LocalDate creationDate) {
+                    Status status, LocalDate creationDate, LocalDate dateMaintenanceFee) {
         super(id, balance, secretKey, primaryOwner, secondaryOwner, status, creationDate);
+        this.dateMaintenanceFee = dateMaintenanceFee;
     }
 
-/*
-    *//**
-     * Checking accounts should have a minimum balance, if the balance if less than the minimum,
-     * the value for the balance
-     * @param balance
-     *//*
-    @Override
-    public void setBalance(Money balance) {
-        if (balance.getAmount().compareTo(minimumBalance)==-1){
-            super.setBalance(null);
-        } else {
-            super.setBalance(balance);
-        }
+    public LocalDate getDateMaintenanceFee() {
+        return dateMaintenanceFee;
+    }
 
-    }*/
-
-
+    public void setDateMaintenanceFee(LocalDate dateMaintenanceFee) {
+        this.dateMaintenanceFee = dateMaintenanceFee;
+    }
 }

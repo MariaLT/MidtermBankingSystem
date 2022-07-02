@@ -18,4 +18,8 @@ public interface AccountController {
     void applyInterestSavingAccount();
 
     void applyInterestCreditCard();
+
+    void monthlyMaintenanceFee();
+
+    void penaltyFee();
 }

@@ -81,6 +81,18 @@ public class AccountControllerImpl implements AccountController {
     public void applyInterestCreditCard() {
         accountService.applyInterestCreditCard();
     }
+
+
+    @PatchMapping("/accounts/maintenance")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void monthlyMaintenanceFee(){
+        accountService.monthlyMaintenanceFee();
+    }
+    @PatchMapping("/accounts/penaltyfee")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void penaltyFee(){
+        accountService.penaltyFee();
+    }
 }
 
 
