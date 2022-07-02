@@ -1,5 +1,7 @@
 package com.ironhack.MidtermBankingSystem.controller.impl.accounts;
 
+import com.ironhack.MidtermBankingSystem.controller.dto.AccountBalanceDTO;
+import com.ironhack.MidtermBankingSystem.controller.dto.AccountInfoToAdminDTO;
 import com.ironhack.MidtermBankingSystem.controller.dto.AccountStatusDTO;
 import com.ironhack.MidtermBankingSystem.controller.interfaces.accounts.AccountController;
 import com.ironhack.MidtermBankingSystem.models.accounts.*;
@@ -13,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class AccountControllerImpl implements AccountController {
@@ -92,6 +96,27 @@ public class AccountControllerImpl implements AccountController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void penaltyFee(){
         accountService.penaltyFee();
+    }
+
+    @PatchMapping("/accounts/{id}/modifybalance")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void modifyBalanceByAdmin(@PathVariable Long id,
+                                     @RequestBody @Valid AccountBalanceDTO accountBalanceDTO) {
+
+        accountService.modifyBalanceByAdmin(id,accountBalanceDTO);
+    }
+
+    @GetMapping("/accounts{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AccountInfoToAdminDTO accountInfoToAdminById(@PathVariable Long id) {
+        return accountService.accountInfoToAdminById(id);
+    }
+
+
+    @GetMapping("/accounts")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<Long,AccountInfoToAdminDTO> accountInfoToAdmin() {
+        return accountService.accountInfoToAdmin();
     }
 }
 

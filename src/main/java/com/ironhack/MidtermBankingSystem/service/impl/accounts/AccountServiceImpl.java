@@ -1,6 +1,8 @@
 package com.ironhack.MidtermBankingSystem.service.impl.accounts;
 
 import com.ironhack.MidtermBankingSystem.auxiliary.Money;
+import com.ironhack.MidtermBankingSystem.controller.dto.AccountBalanceDTO;
+import com.ironhack.MidtermBankingSystem.controller.dto.AccountInfoToAdminDTO;
 import com.ironhack.MidtermBankingSystem.enums.Status;
 import com.ironhack.MidtermBankingSystem.models.accounts.*;
 import com.ironhack.MidtermBankingSystem.repository.accounts.*;
@@ -13,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -176,16 +178,6 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    /*  saving y checkin */
-
-    /**
-     * Deduce a penalty fee from the balance, when the account drop below the minimum balance.
-     *//*
-    public void penaltyFee(){
-        if (getBalance().getAmount().compareTo(minimumBalance)==-1){
-            getBalance().decreaseAmount(PENALTY_FEE);
-        }
-    }*/
     @Override
     public void penaltyFee() {
         List<Saving> savingList = savingRepository.findAll();
@@ -202,5 +194,45 @@ public class AccountServiceImpl implements AccountService {
                         decreaseAmount(Saving.PENALTY_FEE)));
             }
         }
+    }
+
+    @Override
+    public Map<Long, AccountInfoToAdminDTO> accountInfoToAdmin() {
+        List<Account> accountList = accountRepository.findAll();
+        Map<Long, AccountInfoToAdminDTO> infoToAdminDTOMap = new HashMap<>();
+        List<String> namesOwners = new ArrayList<>();
+        for (Account account : accountList) {
+            namesOwners.add(account.getPrimaryOwner().getName());
+            namesOwners.add(account.getSecondaryOwner().getName());
+            infoToAdminDTOMap.put(account.getId(), new AccountInfoToAdminDTO(namesOwners,
+                    account.getBalance()));
+        }
+        return infoToAdminDTOMap;
+    }
+
+    @Override
+    public AccountInfoToAdminDTO accountInfoToAdminById(Long id) {
+        Account account = accountRepository.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "The account isn't exists"));
+
+        List<String> namesOwners = new ArrayList<>();
+        namesOwners.add(account.getPrimaryOwner().getName());
+        namesOwners.add(account.getSecondaryOwner().getName());
+
+        AccountInfoToAdminDTO accountInfoToAdminDTO =
+                new AccountInfoToAdminDTO(namesOwners, account.getBalance());
+
+        return accountInfoToAdminDTO;
+    }
+
+    @Override
+    public void modifyBalanceByAdmin(Long id, AccountBalanceDTO accountBalanceDTO) {
+        Account account = accountRepository.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "The account isn't exists"));
+
+        account.setBalance(new Money(account.getBalance().getAmount().add(accountBalanceDTO.getBalance().
+                getAmount())));
+
+        accountRepository.save(account);
     }
 }
