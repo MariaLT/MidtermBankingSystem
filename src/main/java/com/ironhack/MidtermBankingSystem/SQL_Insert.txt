@@ -1,16 +1,14 @@
 
 INSERT INTO user_table (username, password)
-VALUES ("ADMIN", "$2a$10$zD1xGUAHo7J2aa4yJx.Rv.VIz1ISrBysmA13auu7lng2Fpu5ziTSS"),
-("OWNER_1", "$2a$10$zD1xGUAHo7J2aa4yJx.Rv.VIz1ISrBysmA13auu7lng2Fpu5ziTSS"),
-("OWNER_2", "amapola");
+VALUES ("ADMIN", "$2a$10$g2u/McjSiFmdHnotKzawxuJrc/9rd/5zWBsWHBXV3wraZKf/r0yK2");
 
 INSERT INTO role_table (name, user_id)
-VALUES ("ADMIN", "1"),
-("OWNERS", "2");
+VALUES ("ADMIN", "1");
 
 INSERT INTO admin_table (id, name) VALUES (1, "ADMIN");
 
+/*
 INSERT INTO  account_holder ( id, first_name, date_of_birth, mailing_address, street,
 building_number, floor, door, zip_code, city, country)
  VALUES
- (2, "Sofía", "1999/07/22", "sofia@sofia.com", "Calle", 2, 2, "2", 15263, "Madrid", "España");
+ (2, "Sofía", "1999/07/22", "sofia@sofia.com", "Calle", 2, 2, "2", 15263, "Madrid", "España");*/
