@@ -1,6 +1,8 @@
 package com.ironhack.MidtermBankingSystem.models.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -24,7 +26,8 @@ public class User {
         public User(Long id, String username, String password) {
                 this.id = id;
                 this.username = username;
-                this.password = password;
+                setPassword(password);
+                //this.password= password;
         }
 
         public Long getId() {
@@ -48,7 +51,8 @@ public class User {
         }
 
         public void setPassword(String password) {
-                this.password = password;
+                PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                this.password =  passwordEncoder.encode(password);
         }
 
         public Set<Role> getRoles() {

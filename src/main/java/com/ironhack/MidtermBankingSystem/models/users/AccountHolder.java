@@ -35,6 +35,7 @@ public class AccountHolder extends User{
     })
     private Address primaryAddress;
 
+    // tengo que añadir el .com o .algo
     @Pattern(regexp = "^(.+)@(.+)$", message = "Mail address not valid")
     private String mailingAddress; // regex
 

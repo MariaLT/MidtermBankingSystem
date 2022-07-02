@@ -27,7 +27,6 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.GET, "/accountHolders").hasRole("ADMIN") // solo usuarios autenticados
                 .antMatchers(HttpMethod.POST, "/accountHolders").hasRole("ADMIN") // Solo ADMIN
                 .antMatchers(HttpMethod.GET, "/savings").hasRole("ADMIN")
-                //.antMatchers(").hasAnyRole("OWNERS") // Solo ADMIN y TECHNICIAN
                 .anyRequest().permitAll(); // El resto de los enpoints son públicos
         return http.build();
     }

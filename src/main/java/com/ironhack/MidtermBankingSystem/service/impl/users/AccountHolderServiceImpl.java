@@ -2,23 +2,26 @@ package com.ironhack.MidtermBankingSystem.service.impl.users;
 
 import com.ironhack.MidtermBankingSystem.controller.dto.AccountHolderBasicInfoDTO;
 import com.ironhack.MidtermBankingSystem.models.users.AccountHolder;
+import com.ironhack.MidtermBankingSystem.models.users.Role;
 import com.ironhack.MidtermBankingSystem.repository.accounts.AccountRepository;
 import com.ironhack.MidtermBankingSystem.repository.users.AccountHolderRepository;
+import com.ironhack.MidtermBankingSystem.repository.users.RoleRepository;
 import com.ironhack.MidtermBankingSystem.service.interfaces.users.AccountHolderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AccountHolderServiceImpl implements AccountHolderService {
 
     @Autowired
     AccountHolderRepository accountHolderRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
 
     @Override
@@ -40,11 +43,17 @@ public class AccountHolderServiceImpl implements AccountHolderService {
 
         for (int i = 0; i < accountHolderList.size(); i++) {
 
+            Role [] objectsArray = accountHolderList.get(i).getRoles().toArray(Role[]::new);
+            ArrayList<String> rolesList = new ArrayList<>();
+            for (int j = 0; j < objectsArray.length; j++) {
+               rolesList.add(objectsArray[j].getName());
+            }
+            accountHolderBasicInfoDTO.setRoles(rolesList);
+            accountHolderBasicInfoDTO.setId(accountHolderList.get(i).getId());
             accountHolderBasicInfoDTO.setName(accountHolderList.get(i).getName());
             accountHolderBasicInfoDTO.setDateOfBirth(accountHolderList.get(i).getDateOfBirth());
             accountHolderBasicInfoDTO.setPrimaryAddress(accountHolderList.get(i).getPrimaryAddress());
             accountHolderBasicInfoDTO.setMailingAddress(accountHolderList.get(i).getMailingAddress());
-
             accountHolderBasicInfoDTOList.add(accountHolderBasicInfoDTO);
 
         }

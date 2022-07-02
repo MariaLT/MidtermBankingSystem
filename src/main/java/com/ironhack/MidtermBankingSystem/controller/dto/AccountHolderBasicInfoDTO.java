@@ -1,6 +1,7 @@
 package com.ironhack.MidtermBankingSystem.controller.dto;
 
 import com.ironhack.MidtermBankingSystem.auxiliary.Address;
+import com.ironhack.MidtermBankingSystem.models.users.Role;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -8,11 +9,16 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Set;
 
 public class AccountHolderBasicInfoDTO {
 
+    private Long id;
     private String name;
     private LocalDate dateOfBirth;
+
+    private ArrayList <String> roles;
 
     @Embedded
     @AttributeOverrides({
@@ -33,11 +39,22 @@ public class AccountHolderBasicInfoDTO {
     public AccountHolderBasicInfoDTO() {
     }
 
-    public AccountHolderBasicInfoDTO(String name, LocalDate dateOfBirth, Address primaryAddress, String mailingAddress) {
+    public AccountHolderBasicInfoDTO(Long id, String name, LocalDate dateOfBirth, ArrayList<String> roles,
+                                     Address primaryAddress, String mailingAddress) {
+        this.id = id;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
+        this.roles = roles;
         this.primaryAddress = primaryAddress;
         this.mailingAddress = mailingAddress;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -54,6 +71,14 @@ public class AccountHolderBasicInfoDTO {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public ArrayList<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(ArrayList<String> roles) {
+        this.roles = roles;
     }
 
     public Address getPrimaryAddress() {
