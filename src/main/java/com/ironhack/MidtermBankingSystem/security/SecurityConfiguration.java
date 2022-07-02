@@ -24,11 +24,29 @@ public class SecurityConfiguration {
         http.httpBasic(); // Vamos a utilizar basic auth
         http.csrf().disable(); // Desactivamos la protección CSRF porque nosotros no vamos a manejar el HTML
         http.authorizeRequests() // Vamos a estacler la protección de cada endpoint individualmente
-                .antMatchers(HttpMethod.GET, "/accountHolders").hasRole("ADMIN") // solo usuarios autenticados
-                .antMatchers(HttpMethod.POST, "/accountHolders").hasRole("ADMIN") // Solo ADMIN
-                .antMatchers(HttpMethod.GET, "/savings").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/savings").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/checkings").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/creditcards").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/thirdparties").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/accountHolders").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/roles").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/accounts/{id}/update").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/accounts/savinginterest").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/accounts/creditcardinterest").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/accounts/maintenance").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/accounts/penaltyfee").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/accounts/{id}/modifybalance").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/accounts{id}").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/accountHolders").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,"/accounts/{id}/balance").hasRole("OWNER")
+                .antMatchers(HttpMethod.GET,"/accounts/{id}/transfer").hasRole("OWNER")
                 .anyRequest().permitAll(); // El resto de los enpoints son públicos
         return http.build();
+//        @PatchMapping("/accounts/{hashedKey}/receivemoney")
+//        @PatchMapping("/thirdparties/{hashedKey}/sendmoney")
+
     }
 
     @Bean

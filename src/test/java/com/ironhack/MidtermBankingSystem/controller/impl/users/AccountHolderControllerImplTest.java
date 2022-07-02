@@ -1,18 +1,14 @@
-package com.ironhack.MidtermBankingSystem.repository.accounts;
+package com.ironhack.MidtermBankingSystem.controller.impl.users;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class AccountRepositoryTest {
-
-    @Autowired
-    AccountRepository accountRepository;
+class AccountHolderControllerImplTest {
 
     @BeforeEach
     void setUp() {
@@ -23,6 +19,10 @@ class AccountRepositoryTest {
     }
 
     @Test
-    void findAll() {
+    void listAccountHoldersBasicInfo() {
+    }
+
+    @Test
+    void createAccountHolder() {
     }
 }

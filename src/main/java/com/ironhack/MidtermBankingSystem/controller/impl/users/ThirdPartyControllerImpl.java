@@ -18,7 +18,7 @@ public class ThirdPartyControllerImpl implements ThirdPartyController {
     @Autowired
     ThirdPartyService thirdPartyService;
 
-    @PostMapping("thirdparties/")
+    @PostMapping("/thirdparties")
     @ResponseStatus(HttpStatus.CREATED)
     public ThirdParty createThirdParty(@RequestBody ThirdParty thirdParty) {
         return thirPartyRepository.save(thirdPartyService.createThirdParty(thirdParty));
