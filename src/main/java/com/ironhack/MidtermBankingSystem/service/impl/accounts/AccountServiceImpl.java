@@ -226,13 +226,57 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void modifyBalanceByAdmin(Long id, AccountBalanceDTO accountBalanceDTO) {
+    public void modifyBalanceByAdmin(Long id, Money balance) {
         Account account = accountRepository.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "The account isn't exists"));
 
-        account.setBalance(new Money(account.getBalance().getAmount().add(accountBalanceDTO.getBalance().
+        account.setBalance(new Money(account.getBalance().getAmount().add(balance.
                 getAmount())));
 
         accountRepository.save(account);
+
+    }
+
+    @Override
+    public Money accountBalanceOwner(Long idOwner, Long idAccount, String secretKey) {
+        Account account = accountRepository.findById(idAccount).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "The account isn't exists"));
+
+        if (account.getPrimaryOwner().getId() == idOwner || account.getSecondaryOwner().getId() == idOwner
+                && account.getSecretKey().equals(secretKey)) {
+            return account.getBalance();
+        } else {
+            new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Incorrect information");
+            return null;
+        }
+
+    }
+
+    @Override
+    public void transfer(Long idOwner, Long idAccount, String secretKey, Money transfer,
+                         Long idAccountReceiveMoney, String nameHolderAccountReceiveMoney) {
+        Account account = accountRepository.findById(idAccount).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "The account isn't exists"));
+
+        Account accountReceive = accountRepository.findById(idAccountReceiveMoney).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "The account isn't exists"));
+
+
+        if (account.getPrimaryOwner().getId() == idOwner || account.getSecondaryOwner().getId() == idOwner
+                && account.getSecretKey().equals(secretKey) &&
+                accountReceive.getPrimaryOwner().getName().equals(nameHolderAccountReceiveMoney) ||
+                accountReceive.getSecondaryOwner().getName().equals(nameHolderAccountReceiveMoney)
+                        && account.getBalance().getAmount().compareTo(transfer.getAmount()) == 1 &&
+                        transfer.getAmount().compareTo(BigDecimal.valueOf(0)) == 1) {
+
+            accountReceive.setBalance(new Money(accountReceive.getBalance().increaseAmount(transfer)));
+            account.setBalance(new Money(account.getBalance().decreaseAmount(transfer)));
+
+        } else {
+            new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Incorrect information" +
+                    "or the account has not sufficient funds");
+        }
+        accountRepository.save(account);
+        accountRepository.save(accountReceive);
     }
 }

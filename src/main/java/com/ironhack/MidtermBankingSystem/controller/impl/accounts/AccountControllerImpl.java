@@ -1,8 +1,7 @@
 package com.ironhack.MidtermBankingSystem.controller.impl.accounts;
 
-import com.ironhack.MidtermBankingSystem.controller.dto.AccountBalanceDTO;
-import com.ironhack.MidtermBankingSystem.controller.dto.AccountInfoToAdminDTO;
-import com.ironhack.MidtermBankingSystem.controller.dto.AccountStatusDTO;
+import com.ironhack.MidtermBankingSystem.auxiliary.Money;
+import com.ironhack.MidtermBankingSystem.controller.dto.*;
 import com.ironhack.MidtermBankingSystem.controller.interfaces.accounts.AccountController;
 import com.ironhack.MidtermBankingSystem.models.accounts.*;
 import com.ironhack.MidtermBankingSystem.repository.accounts.CheckingRepository;
@@ -103,7 +102,7 @@ public class AccountControllerImpl implements AccountController {
     public void modifyBalanceByAdmin(@PathVariable Long id,
                                      @RequestBody @Valid AccountBalanceDTO accountBalanceDTO) {
 
-        accountService.modifyBalanceByAdmin(id,accountBalanceDTO);
+        accountService.modifyBalanceByAdmin(id,accountBalanceDTO.getBalance());
     }
 
     @GetMapping("/accounts{id}")
@@ -118,6 +117,25 @@ public class AccountControllerImpl implements AccountController {
     public Map<Long,AccountInfoToAdminDTO> accountInfoToAdmin() {
         return accountService.accountInfoToAdmin();
     }
+
+    @GetMapping("/accounts/{id}/balance")
+    @ResponseStatus(HttpStatus.OK)
+    public Money accountBalanceOwner(@PathVariable Long idOwner,
+                                     @RequestBody @Valid AccountIdAndSecretKeyDTO accountIdAndSecretKeyDTO) {
+        return accountService.accountBalanceOwner(idOwner, accountIdAndSecretKeyDTO.getId(),
+                accountIdAndSecretKeyDTO.getSecretKey());
+    }
+
+    @PatchMapping("/accounts/{id}/transfer")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void transfer(@PathVariable Long id,
+                         @RequestBody @Valid TransferDTO transferDTO) {
+        accountService.transfer(id, transferDTO.getId(), transferDTO.getSecretKey(), transferDTO.getTransfer(),
+                transferDTO.getIdAccountReceiveMoney(), transferDTO.getNameHolderAccountReceiveMoney());
+
+    }
 }
+
+
 
 
