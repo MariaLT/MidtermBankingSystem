@@ -48,9 +48,9 @@ public class Checking extends Account {
      * @param secondaryOwner
      * @param status
      */
-    public Checking(Long id, Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+    public Checking(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
                     Status status, LocalDate creationDate, LocalDate dateMaintenanceFee) {
-        super(id, balance, secretKey, primaryOwner, secondaryOwner, status, creationDate);
+        super(balance, secretKey, primaryOwner, secondaryOwner, status, creationDate);
         this.dateMaintenanceFee = dateMaintenanceFee;
     }
 

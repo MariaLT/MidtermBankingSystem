@@ -20,9 +20,18 @@ public class ThirdPartyControllerImpl implements ThirdPartyController {
 
     @PostMapping("/thirdparties")
     @ResponseStatus(HttpStatus.CREATED)
-    public ThirdParty createThirdParty(@RequestBody ThirdParty thirdParty) {
-        return thirPartyRepository.save(thirdPartyService.createThirdParty(thirdParty));
+    public ThirdParty createThirdParty(@RequestBody @Valid ThirdParty thirdParty) {
+        return thirPartyRepository.save(
+                thirdPartyService.createThirdParty(thirdParty));
     }
+
+    /*    @PostMapping("/accountHolders")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder accountHolder) {
+
+        return accountHolderRepository.save(
+                accountHolderService.createAccountHolder(accountHolder));
+    }*/
 
     @PatchMapping("/thirdparties/{hashedKey}/sendmoney")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -33,7 +42,7 @@ public class ThirdPartyControllerImpl implements ThirdPartyController {
 
     }
 
-    @PatchMapping("/accounts/{hashedKey}/receivemoney")
+    @PatchMapping("/thirdparties/{hashedKey}/receivemoney")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void thirdPartyReceiveMoney(@PathVariable String hashedKey,
                                        @RequestBody @Valid ThirdPartyTransferDTO thirdPartyTransferDTO) {

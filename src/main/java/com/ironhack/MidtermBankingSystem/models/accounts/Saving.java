@@ -78,9 +78,9 @@ public class Saving extends Account {
      * @param status
      * @param interestRate
      */
-    public Saving(Long id,Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+    public Saving(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
                   Status status, LocalDate creationDate, BigDecimal interestRate) {
-        super(id,balance, secretKey, primaryOwner, secondaryOwner, status, creationDate);
+        super(balance, secretKey, primaryOwner, secondaryOwner, status, creationDate);
         setBalance(balance);
         setInterestRate(interestRate);
         this.interestAddDate = null;

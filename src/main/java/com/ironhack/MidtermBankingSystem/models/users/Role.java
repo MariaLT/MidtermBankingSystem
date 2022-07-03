@@ -14,10 +14,10 @@ public class Role {
     private User user;
 
 
-    public Role () {}
+    public Role() {
+    }
 
-    public Role(Long id, String name, User user) {
-        this.id = id;
+    public Role(String name, User user) {
         this.name = name;
         this.user = user;
     }

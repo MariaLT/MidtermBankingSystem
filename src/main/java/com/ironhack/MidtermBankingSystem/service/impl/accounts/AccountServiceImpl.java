@@ -41,16 +41,16 @@ public class AccountServiceImpl implements AccountService {
             }
         }
         if (Period.between(account.getPrimaryOwner().getDateOfBirth(), LocalDate.now()).getYears() < 25) {
-            StudentChecking studentChecking = new StudentChecking(account.getId(), account.getBalance(),
+            StudentChecking studentChecking = new StudentChecking(account.getBalance(),
                     account.getSecretKey(),
                     account.getPrimaryOwner(), account.getSecondaryOwner(), account.getStatus(), account.getCreationDate());
             studentCheckingRepository.save(studentChecking);
         } else {
             if (account.getBalance().getAmount().compareTo(Checking.MINIMUM_BALANCE) == -1) {
-                new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Checking accounts should have " +
+               throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Checking accounts should have " +
                         "a minimumBalance of 250");
             } else {
-                Checking checking = new Checking(account.getId(), account.getBalance(), account.getSecretKey(),
+                Checking checking = new Checking(account.getBalance(), account.getSecretKey(),
                         account.getPrimaryOwner(), account.getSecondaryOwner(),
                         account.getStatus(), account.getCreationDate(), null);
                 checkingRepository.save(checking);
@@ -246,8 +246,8 @@ public class AccountServiceImpl implements AccountService {
                 && account.getSecretKey().equals(secretKey)) {
             return account.getBalance();
         } else {
-            new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Incorrect information");
-            return null;
+            throw new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Incorrect information");
+
         }
 
     }
@@ -273,7 +273,7 @@ public class AccountServiceImpl implements AccountService {
             account.setBalance(new Money(account.getBalance().decreaseAmount(transfer)));
 
         } else {
-            new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Incorrect information" +
+            throw new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Incorrect information" +
                     "or the account has not sufficient funds");
         }
         accountRepository.save(account);

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 public class ThirdPartyServiceImpl implements ThirdPartyService {
@@ -25,9 +26,12 @@ public class ThirdPartyServiceImpl implements ThirdPartyService {
 
     @Override
     public ThirdParty createThirdParty(ThirdParty thirdParty) {
-        ThirdParty thirdPartyReturn = thirPartyRepository.findById(thirdParty.getId()).orElseThrow(()->
-                new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "The thirdParty already exists"));
-        return thirdPartyReturn;
+        Optional<ThirdParty> optionalAccountHolder = thirPartyRepository.findById(thirdParty.getId());
+        if (optionalAccountHolder.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "The third party already exists");
+        } else {
+            return thirPartyRepository.save(thirdParty);
+        }
     }
 
     @Override
@@ -41,9 +45,11 @@ public class ThirdPartyServiceImpl implements ThirdPartyService {
             account.setBalance(new Money(account.getBalance().increaseAmount(amount)));
             accountRepository.save(account);
         } else {
-            new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Incorrect secret key" +
-                    "or the amount is negative");
+            throw new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Incorrect secret key" +
+                    " or the amount is negative");
         }
+
+
 
     }
 
@@ -54,12 +60,12 @@ public class ThirdPartyServiceImpl implements ThirdPartyService {
         Account account = accountRepository.findById(accountId).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "The account is not exists"));
 
-        if (account.getSecretKey().equals(secretKey) && amount.compareTo(BigDecimal.valueOf(0))==-1){
+        if (account.getSecretKey().equals(secretKey)){
             account.setBalance(new Money(account.getBalance().decreaseAmount(amount)));
             accountRepository.save(account);
         } else {
-            new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Incorrect secret key" +
-                    "or the amount is positive");
+            throw new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Incorrect secret key" +
+                    " or the amount is positive");
         }
     }
 }

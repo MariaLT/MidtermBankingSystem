@@ -51,9 +51,9 @@ public class AccountHolder extends User{
     public AccountHolder() {
     }
 
-    public AccountHolder(Long id, String username, String password, String name,
+    public AccountHolder(String username, String password, String name,
                          LocalDate dateOfBirth, Address primaryAddress, String mailingAddress) {
-        super(id, username, password);
+        super(username, password);
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.primaryAddress = primaryAddress;

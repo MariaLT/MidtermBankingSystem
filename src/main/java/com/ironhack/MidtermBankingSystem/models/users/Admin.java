@@ -20,8 +20,8 @@ public class Admin extends User {
 
     }
 
-    public Admin(Long id, String username, String password, String name) {
-        super(id, username, password);
+    public Admin(String username, String password, String name) {
+        super(username, password);
         this.name = name;
     }
 

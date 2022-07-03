@@ -66,7 +66,7 @@ public class Account {
      * @param secondaryOwner
      * @param status
      */
-    public Account(Long id, Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
+    public Account(Money balance, String secretKey, AccountHolder primaryOwner, AccountHolder secondaryOwner,
                    Status status, LocalDate creationDate) {
         setId(id);
         this.balance = balance;

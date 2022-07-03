@@ -2,12 +2,12 @@ package com.ironhack.MidtermBankingSystem.models.users;
 
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * Users who receive and send money to other accounts.
  */
 @Entity
-@PrimaryKeyJoinColumn(name = "id")
 public class ThirdParty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,8 @@ public class ThirdParty {
     public ThirdParty() {
     }
 
-    public ThirdParty(String name, String hashedKey) {
+    public ThirdParty(Long id, String name, String hashedKey) {
+        this.id=id;
         this.name = name;
         this.hashedKey = hashedKey;
     }
@@ -45,5 +46,18 @@ public class ThirdParty {
 
     public void setHashedKey(String hashedKey) {
         this.hashedKey = hashedKey;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ThirdParty that = (ThirdParty) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(hashedKey, that.hashedKey);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, hashedKey);
     }
 }
