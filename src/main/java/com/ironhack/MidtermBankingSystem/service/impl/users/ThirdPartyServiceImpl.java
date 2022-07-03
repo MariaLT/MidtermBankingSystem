@@ -68,4 +68,13 @@ public class ThirdPartyServiceImpl implements ThirdPartyService {
                     " or the amount is positive");
         }
     }
+
+    @Override
+    public void deleteThirdParty(Long id) {
+        ThirdParty thirdPartyReturn = thirPartyRepository.findById(id).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "The thirdParty is not exists"));
+
+        thirPartyRepository.delete(thirdPartyReturn);
+
+    }
 }

@@ -12,6 +12,7 @@ import com.ironhack.MidtermBankingSystem.models.users.Role;
 import com.ironhack.MidtermBankingSystem.models.users.ThirdParty;
 import com.ironhack.MidtermBankingSystem.models.users.User;
 import com.ironhack.MidtermBankingSystem.repository.accounts.AccountRepository;
+import com.ironhack.MidtermBankingSystem.repository.users.AccountHolderRepository;
 import com.ironhack.MidtermBankingSystem.repository.users.ThirPartyRepository;
 import com.ironhack.MidtermBankingSystem.repository.users.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,6 +34,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -44,6 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class ThirdPartyControllerImplTest {
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -52,13 +56,17 @@ class ThirdPartyControllerImplTest {
     private ThirPartyRepository thirPartyRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private AccountHolderRepository accountHolderRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private User admin, owner1;
-    private Role adminRole,ownerRol;
+    private Role adminRole, ownerRol;
 
-    private ThirdParty thirdParty1;
+    private ThirdParty thirdParty1, thirdParty2;
 
     private AccountHolder accountHolder1;
     @Embedded
@@ -79,34 +87,39 @@ class ThirdPartyControllerImplTest {
 
     @BeforeEach
     void setUp() {
-
-        admin = new User("admin", "password");
-        owner1 = new User("owner_1", "sandia");
-
+        admin = new User("admin", passwordEncoder.encode("password"));
         adminRole = new Role("ADMIN", admin);
+        owner1 = new User("owner_1", "sandia");
         ownerRol = new Role("OWNER", owner1);
-
-        thirdParty1 = new ThirdParty(1L,"Helados Porras", "heladosporras");
-       // thirdParty2 = new ThirdParty(1L, "Merceria", "merceria");
-
-
-
-        admin.setRoles(Set.of(adminRole,ownerRol));
-        userRepository.saveAll(List.of(admin,owner1));
-
+        admin.setRoles(Set.of(adminRole, ownerRol));
+        userRepository.saveAll(List.of(admin, owner1));
+        accountHolder1 = new AccountHolder("owner_1", "sandia", "Paloma", LocalDate.of(1999, 07, 22),
+                address, "paloma@paloma.es");
+        accountHolderRepository.save(accountHolder1);
+        account = new Account(new Money(BigDecimal.valueOf(2000)), "sandia", accountHolder1, null, Status.ACTIVE, null);
+        accountRepository.save(account);
 
     }
 
+
     @AfterEach
     void tearDown() {
-        userRepository.deleteAll();
+
         accountRepository.deleteAll();
+        accountHolderRepository.deleteAll();
+        userRepository.deleteAll();
+
+        thirPartyRepository.deleteAll();
+
+
+
     }
 
     @Test
     void createThirdParty_test_valid() throws Exception {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic QURNSU46cGFzc3dvcmQ=");
+        thirdParty1 = new ThirdParty(1L, "Helados Porras", "heladosporras");
         String body = objectMapper.writeValueAsString(thirdParty1);
 
         MvcResult mvcResult = mockMvc.perform(
@@ -118,31 +131,84 @@ class ThirdPartyControllerImplTest {
                 .andReturn();
 
         assertTrue(mvcResult.getResponse().getContentAsString().contains("Helados Porras"));
-      assertTrue(thirPartyRepository.existsById(thirdParty1.getId()));
+        assertTrue(thirPartyRepository.existsById(thirdParty1.getId()));
 
     }
 
-/*    @Test
-    void thirdPartySendMoney() throws Exception {
+    @Test
+    void thirdPartySendMoney_test_valid() throws Exception {
+
+        thirdParty1 = new ThirdParty(1L, "Helados Porras", "heladosporras");
+        thirPartyRepository.save(thirdParty1);
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic QURNSU46cGFzc3dvcmQ=");
+
+
+        thirdPartyTransferDTO = new ThirdPartyTransferDTO(BigDecimal.valueOf(50), account.getId(), account.getSecretKey());
         String body = objectMapper.writeValueAsString(thirdPartyTransferDTO);
 
-
         MvcResult mvcResult = mockMvc.perform(
-                        patch("/thirdparties/"+ thirdParty1.getHashedKey()+ "/sendmoney")
+                        patch("/thirdparties/" + thirdParty1.getHashedKey() + "/sendmoney")
                                 .content(body)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .headers(httpHeaders))
                 .andExpect(status().isNoContent())
                 .andReturn();
 
-        //);
-            //assertEquals(BigDecimal.OF, account.getBalance().getAmount().toBigInteger());
+        assertEquals(HttpStatus.NO_CONTENT, HttpStatus.resolve(mvcResult.getResponse().getStatus()));
+        assertTrue(accountRepository.findById(account.getId()).get().getBalance().getAmount()
+               .compareTo(account.getBalance().getAmount().add(thirdPartyTransferDTO.getAmount())) == 0);
 
-    }*/
+    }
 
     @Test
-    void thirdPartyReceiveMoney() {
+    void thirdPartyReceiveMoney_test_valid() throws Exception {
+
+        thirdParty1 = new ThirdParty(1L, "Helados Porras", "heladosporras");
+        thirPartyRepository.save(thirdParty1);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Basic QURNSU46cGFzc3dvcmQ=");
+
+
+        thirdPartyTransferDTO = new ThirdPartyTransferDTO(BigDecimal.valueOf(50), account.getId(), account.getSecretKey());
+        String body = objectMapper.writeValueAsString(thirdPartyTransferDTO);
+
+        MvcResult mvcResult = mockMvc.perform(
+                        patch("/thirdparties/" + thirdParty1.getHashedKey() + "/receivemoney")
+                                .content(body)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .headers(httpHeaders))
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        assertEquals(HttpStatus.NO_CONTENT, HttpStatus.resolve(mvcResult.getResponse().getStatus()));
+        assertTrue(accountRepository.findById(account.getId()).get().getBalance().getAmount()
+                .compareTo(account.getBalance().getAmount().subtract(thirdPartyTransferDTO.getAmount())) == 0);
+
+
+
+    }
+
+    @Test
+    void deleteThirdParty_test_valid() throws Exception {
+
+        thirdParty2 = new ThirdParty(1L, "Helados Porras", "heladosporras");
+        thirPartyRepository.save(thirdParty2);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Basic QURNSU46cGFzc3dvcmQ=");
+
+
+        MvcResult mvcResult = mockMvc.perform(
+                        delete("/thirdparties/"+ thirdParty2.getId()+"/delete")
+                                .headers(httpHeaders))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertEquals(HttpStatus.OK, HttpStatus.resolve(mvcResult.getResponse().getStatus()));
+        assertFalse(thirPartyRepository.existsById(thirdParty2.getId()));
+
     }
 }

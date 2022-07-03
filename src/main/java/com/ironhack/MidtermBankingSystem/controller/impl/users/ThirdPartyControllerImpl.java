@@ -25,14 +25,6 @@ public class ThirdPartyControllerImpl implements ThirdPartyController {
                 thirdPartyService.createThirdParty(thirdParty));
     }
 
-    /*    @PostMapping("/accountHolders")
-    @ResponseStatus(HttpStatus.CREATED)
-    public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder accountHolder) {
-
-        return accountHolderRepository.save(
-                accountHolderService.createAccountHolder(accountHolder));
-    }*/
-
     @PatchMapping("/thirdparties/{hashedKey}/sendmoney")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void thirdPartySendMoney(@PathVariable String hashedKey,
@@ -51,4 +43,10 @@ public class ThirdPartyControllerImpl implements ThirdPartyController {
 
     }
 
+    @DeleteMapping("/thirdparties/{id}/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteThirdParty(@PathVariable Long id) {
+        thirdPartyService.deleteThirdParty(id);
+
+    }
 }

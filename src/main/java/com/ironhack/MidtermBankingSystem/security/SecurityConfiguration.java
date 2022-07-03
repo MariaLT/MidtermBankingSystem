@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.GET,"/accounts/{id}/transfer").hasRole("OWNER")
                 .antMatchers(HttpMethod.PATCH, "/thirdparties/{hashedKey}/sendmoney").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/thirdparties/{hashedKey}/receivemoney").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/thirdparties/{id}/delete").hasRole("ADMIN")
                 .anyRequest().permitAll(); // El resto de los enpoints son públicos
         return http.build();
 //        @PatchMapping("/accounts/{hashedKey}/receivemoney")

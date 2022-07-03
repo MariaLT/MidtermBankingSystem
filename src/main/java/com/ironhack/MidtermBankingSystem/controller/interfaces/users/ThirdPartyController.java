@@ -10,4 +10,6 @@ public interface ThirdPartyController {
     void thirdPartySendMoney(String hashedKey, ThirdPartyTransferDTO thirdPartyTransferDTO);
 
     void thirdPartyReceiveMoney(String hashedKey, ThirdPartyTransferDTO thirdPartyTransferDTO);
+
+    void deleteThirdParty(Long id);
 }

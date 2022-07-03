@@ -11,5 +11,8 @@ public interface ThirdPartyService {
     void thirdPartySendMoney(String hashedKey, BigDecimal amount, Long accountId, String secretKey);
 
     void thirdPartyReceiveMoney(String hashedKey, BigDecimal amount, Long accountId, String secretKey);
+
+    void deleteThirdParty(Long id);
+
 }
 
