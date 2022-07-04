@@ -18,6 +18,125 @@
 
 This project is a banking system.
 
+
+
+# FOR USE
+
+Create de next database:
+
+~~~
+DROP SCHEMA midterm;
+
+CREATE SCHEMA IF NOT EXISTS midterm;
+
+USE midterm;
+
+CREATE TABLE user_table (
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    username VARCHAR(255),
+    password VARCHAR(255), 
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE role_table (
+    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    name VARCHAR(255),
+    user_id BIGINT,
+    FOREIGN KEY (user_id) REFERENCES user_table (id)
+);
+
+CREATE TABLE IF NOT EXISTS admin_table (
+id BIGINT,
+name VARCHAR (255),
+PRIMARY KEY (id),
+FOREIGN KEY (id) REFERENCES user_table (id)
+);
+
+CREATE TABLE IF NOT EXISTS third_party (
+id BIGINT AUTO_INCREMENT,
+name VARCHAR (255),
+hashed_key VARCHAR (255),
+PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS account_holder (
+id BIGINT,
+first_name VARCHAR (255),
+date_of_birth DATE,
+mailing_address VARCHAR (255),
+street VARCHAR (255),
+building_number INT,
+floor INT,
+door VARCHAR (255),
+zip_code INT,
+city VARCHAR (255),
+country VARCHAR (255),
+PRIMARY KEY (id),
+FOREIGN KEY (id) REFERENCES user_table (id)
+);
+
+
+CREATE TABLE IF NOT EXISTS account_table (
+id BIGINT NOT NULL UNIQUE,
+balance_amount DECIMAL,
+balance_currency VARCHAR(255),
+secret_key VARCHAR(255),
+primary_owner BIGINT,
+secondary_owner BIGINT,
+status VARCHAR(255),
+creation_date DATE DEFAULT (current_date()),
+PRIMARY KEY (id),
+FOREIGN KEY (primary_owner) REFERENCES account_holder (id),
+FOREIGN KEY (secondary_owner) REFERENCES account_holder (id) 
+);
+
+CREATE TABLE IF NOT EXISTS checking (
+id BIGINT,
+date_maintenance_fee DATE,
+PRIMARY KEY (id),
+FOREIGN KEY (id) REFERENCES account_table (id) 
+);
+
+CREATE TABLE IF NOT EXISTS credit_card (
+id BIGINT,
+credit_limit_amount DECIMAL,
+credit_limit_currency VARCHAR(255),
+interest_rate DECIMAL,
+interest_add_date DATE,
+PRIMARY KEY (id),
+FOREIGN KEY (id) REFERENCES account_table (id) 
+);
+
+CREATE TABLE IF NOT EXISTS saving (
+id BIGINT,
+interest_rate DECIMAL (19,6),
+interest_add_date DATE,
+PRIMARY KEY (id),
+FOREIGN KEY (id) REFERENCES account_table (id) 
+);
+
+
+CREATE TABLE IF NOT EXISTS student_checking (
+id BIGINT,
+PRIMARY KEY (id),
+FOREIGN KEY (id) REFERENCES account_table (id) 
+);
+~~~
+
+Insert the admin user:
+(The password without encoder is "password")
+~~~
+INSERT INTO user_table (username, password) 
+VALUES ("ADMIN", "$2a$10$g2u/McjSiFmdHnotKzawxuJrc/9rd/5zWBsWHBXV3wraZKf/r0yK2");
+
+INSERT INTO role_table (name, user_id) 
+VALUES ("ADMIN", "1");
+
+INSERT INTO admin_table (id, name) VALUES (1, "ADMIN");
+
+~~
+
+
 ## ADMIN
 An user with Admin role can:
 
