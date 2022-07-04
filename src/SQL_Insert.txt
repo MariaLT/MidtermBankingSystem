@@ -1,0 +1,7 @@
+INSERT INTO user_table (username, password) 
+VALUES ("ADMIN", "$2a$10$g2u/McjSiFmdHnotKzawxuJrc/9rd/5zWBsWHBXV3wraZKf/r0yK2");
+
+INSERT INTO role_table (name, user_id) 
+VALUES ("ADMIN", "1");
+
+INSERT INTO admin_table (id, name) VALUES (1, "ADMIN");
