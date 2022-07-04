@@ -206,4 +206,6 @@ An user with owner role can:
    * **PATCH**  :purple_circle:  "/thirdparties/{hashedKey}/receivemoney"
   
 
-            
+
+
+
