@@ -20,10 +20,9 @@ This project is a banking system.
 
 
 
-# FOR USE
+## FOR USE
 
 Create de next database:
-
 ~~~
 DROP SCHEMA midterm;
 
@@ -75,7 +74,6 @@ PRIMARY KEY (id),
 FOREIGN KEY (id) REFERENCES user_table (id)
 );
 
-
 CREATE TABLE IF NOT EXISTS account_table (
 id BIGINT NOT NULL UNIQUE,
 balance_amount DECIMAL,
@@ -115,7 +113,6 @@ PRIMARY KEY (id),
 FOREIGN KEY (id) REFERENCES account_table (id) 
 );
 
-
 CREATE TABLE IF NOT EXISTS student_checking (
 id BIGINT,
 PRIMARY KEY (id),
@@ -123,8 +120,8 @@ FOREIGN KEY (id) REFERENCES account_table (id)
 );
 ~~~
 
-Insert the admin user:
-(The password without encoder is "password")
+Insert the admin user
+(the password without encoder is "password"):
 ~~~
 INSERT INTO user_table (username, password) 
 VALUES ("ADMIN", "$2a$10$g2u/McjSiFmdHnotKzawxuJrc/9rd/5zWBsWHBXV3wraZKf/r0yK2");
@@ -134,7 +131,7 @@ VALUES ("ADMIN", "1");
 
 INSERT INTO admin_table (id, name) VALUES (1, "ADMIN");
 
-~~
+~~~
 
 
 ## ADMIN
